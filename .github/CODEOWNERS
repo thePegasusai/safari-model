@@ -1,0 +1,29 @@
+# This file defines code ownership and required reviewers for different parts of the codebase
+# Format: pattern team_or_username[team_or_username2]...
+# Order: Most specific rules first, followed by more general ones
+
+# ML Detection Service - Requires both ML and Backend expertise
+src/backend/detection-service/** @wildlifesafari/ml-team @wildlifesafari/backend-team
+
+# Authentication Service - Requires Security and Backend expertise
+src/backend/auth-service/** @wildlifesafari/security-team @wildlifesafari/backend-team
+
+# Kubernetes Configuration - Requires DevOps and Backend expertise
+src/backend/kubernetes/** @wildlifesafari/devops-team @wildlifesafari/backend-team
+
+# Mobile Application Code
+src/android/** @wildlifesafari/android-team
+src/ios/** @wildlifesafari/ios-team
+
+# Backend Services
+src/backend/** @wildlifesafari/backend-team
+
+# Infrastructure and DevOps
+infrastructure/** @wildlifesafari/devops-team
+.github/workflows/** @wildlifesafari/devops-team
+
+# Documentation
+*.md @wildlifesafari/docs-team
+
+# Default owners for everything else in the repo
+* @wildlifesafari/admin-team
