@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+    Wildlife Detection Safari Pokédex Dark Theme
+    MaterialComponents version: 1.9.0
+    
+    Implements Material Design 3 dark theme with:
+    - WCAG 2.1 AA compliant contrast ratios (minimum 4.5:1)
+    - OLED screen optimizations with true black backgrounds
+    - Nature-inspired color palette adapted for dark mode
+    - Consistent elevation and shape system
+-->
+<resources>
+    <!-- Base application dark theme -->
+    <style name="Theme.WildlifeSafari" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand colors -->
+        <item name="colorPrimary">@color/primary_dark</item>
+        <item name="colorPrimaryVariant">@color/primary_dark</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorOnPrimary">@color/on_primary_dark</item>
+
+        <!-- Secondary brand colors -->
+        <item name="colorSecondary">@color/secondary_dark</item>
+        <item name="colorSecondaryVariant">@color/secondary_dark</item>
+        <item name="colorOnSecondary">@color/on_secondary_dark</item>
+
+        <!-- Background colors -->
+        <item name="android:windowBackground">@color/background_dark</item>
+        <item name="colorOnBackground">@color/on_background_dark</item>
+
+        <!-- Surface colors -->
+        <item name="colorSurface">@color/surface_dark</item>
+        <item name="colorOnSurface">@color/on_surface_dark</item>
+
+        <!-- Error colors -->
+        <item name="colorError">@color/error</item>
+        <item name="colorOnError">@color/on_error</item>
+
+        <!-- Status and navigation bar colors -->
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:navigationBarColor">@color/surface_dark</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:windowLightNavigationBar">false</item>
+
+        <!-- Shape appearances -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.WildlifeSafari.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.WildlifeSafari.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.WildlifeSafari.LargeComponent</item>
+
+        <!-- Elevation overlays -->
+        <item name="elevationOverlayEnabled">true</item>
+        <item name="elevationOverlayColor">@color/surface_dark</item>
+        <item name="elevationSmall">@dimen/elevation_small</item>
+        <item name="elevationMedium">@dimen/elevation_medium</item>
+        <item name="elevationLarge">@dimen/elevation_large</item>
+    </style>
+
+    <!-- Shape Appearances -->
+    <style name="ShapeAppearance.WildlifeSafari.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerSize">@dimen/corner_radius_small</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="ShapeAppearance.WildlifeSafari.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerSize">@dimen/corner_radius_medium</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="ShapeAppearance.WildlifeSafari.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerSize">@dimen/corner_radius_large</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+</resources>
