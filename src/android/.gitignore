@@ -1,0 +1,124 @@
+# Gradle files
+.gradle/
+/build/
+/captures/
+.externalNativeBuild/
+.cxx/
+local.properties
+
+# IDE files
+.idea/
+*.iml
+.project
+.settings/
+.classpath
+*.iws
+*.ipr
+.DS_Store
+.vscode/
+
+# Build outputs
+/app/build/
+/app/release/
+/app/debug/
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Generated files
+bin/
+gen/
+out/
+/*/build/
+/*/release/
+/*/debug/
+*.class
+generated/
+intermediates/
+
+# Proguard
+proguard/
+*.pro
+/app/mapping.txt
+/app/seeds.txt
+/app/unused.txt
+
+# Keystore files - Security Critical
+*.jks
+*.keystore
+*.p12
+*.key
+*.pepk
+keystore.properties
+
+# ML Model files - Sensitive IP
+*.tflite
+*.lite
+*.pb
+app/src/main/assets/models/
+app/src/main/ml/
+
+# Configuration files - Security Sensitive
+google-services.json
+app/src/*/assets/config.json
+app/src/*/res/values/secrets.xml
+firebase.properties
+
+# Crashlytics - Data Protection
+crashlytics.properties
+crashlytics-build.properties
+com_crashlytics_export_strings.xml
+fabric.properties
+
+# Android Studio Navigation editor
+.navigation/
+
+# Android Studio captures folder
+captures/
+
+# IntelliJ
+*.hprof
+
+# Version control
+.svn/
+.hg/
+CVS/
+
+# Backup files
+*~
+*.bak
+*.swp
+*.tmp
+
+# Logs and databases
+*.log
+*.sqlite
+*.db
+
+# OS specific
+Thumbs.db
+desktop.ini
+
+# NDK
+obj/
+.externalNativeBuild
+.cxx
+*.so
+*.o
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+fastlane/readme.md
+
+# Code coverage
+jacoco.exec
+coverage/
+reports/
+
+# Temporary files
+tmp/
+temp/
