@@ -1,0 +1,65 @@
+# Use Eclipse Temurin JRE base image for minimal footprint
+# version: 11-jre-jammy
+FROM eclipse-temurin:11-jre-jammy
+
+# Add metadata labels
+LABEL maintainer="Wildlife Safari Pokédex Team <team@wildlifesafari.com>" \
+      description="Authentication Service for Wildlife Safari Pokédex" \
+      version="1.0.0" \
+      security.protocol="OAuth2.0+OIDC" \
+      base.image.version="eclipse-temurin:11-jre-jammy"
+
+# Install essential packages and clean up
+RUN apt-get update && \
+    apt-get install -y \
+    curl \
+    tzdata && \
+    rm -rf /var/lib/apt/lists/*
+
+# Create non-root user and group
+RUN useradd -r -u 1000 -g root nonroot
+
+# Set working directory
+WORKDIR /app
+
+# Create directory structure
+RUN mkdir -p /app/logs /app/temp && \
+    chown -R nonroot:root /app && \
+    chmod -R g-w /app
+
+# Set process limits for container security
+RUN echo 'auth soft nproc 8192' >> /etc/security/limits.conf
+
+# Copy application artifacts with correct ownership
+COPY --chown=nonroot:root auth-service/target/auth-service.jar /app/auth-service.jar
+COPY --chown=nonroot:root auth-service/security/ /app/security/
+
+# Set environment variables
+ENV JAVA_OPTS="-XX:MaxRAMPercentage=75.0 \
+    -XX:InitialRAMPercentage=50.0 \
+    -XX:+UseG1GC \
+    -XX:+HeapDumpOnOutOfMemoryError \
+    -XX:HeapDumpPath=/tmp \
+    -Djava.security.egd=file:/dev/urandom \
+    -Dspring.output.ansi.enabled=ALWAYS"
+ENV SPRING_PROFILES_ACTIVE="prod"
+ENV TZ="UTC"
+
+# Expose service port
+EXPOSE 8081/tcp
+
+# Switch to non-root user
+USER nonroot
+
+# Set security options
+SECURITY_OPTS="no-new-privileges:true seccomp=unconfined"
+
+# Configure healthcheck
+HEALTHCHECK --interval=30s \
+            --timeout=10s \
+            --retries=3 \
+            --start-period=40s \
+            CMD curl --fail http://localhost:8081/actuator/health || exit 1
+
+# Set entrypoint
+ENTRYPOINT ["java", "$JAVA_OPTS", "-jar", "/app/auth-service.jar"]
