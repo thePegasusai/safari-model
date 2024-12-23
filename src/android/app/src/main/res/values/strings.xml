@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Application Name -->
+    <string name="app_name">Wildlife Safari Pokédex</string>
+
+    <!-- Bottom Navigation Titles -->
+    <string name="title_camera">Camera</string>
+    <string name="title_collection">Collection</string>
+    <string name="title_map">Map</string>
+    <string name="title_profile">Profile</string>
+
+    <!-- Permission Rationales -->
+    <string name="camera_permission_rationale">Camera access is required for wildlife and fossil detection. This helps identify species in real-time.</string>
+    <string name="location_permission_rationale">Location access helps map your discoveries and contribute to global biodiversity research.</string>
+
+    <!-- Detection and Processing Messages -->
+    <string name="detection_processing">Analyzing image with LNN technology…</string>
+    <string name="species_detected_format">Identified: %1$s (%2$s)</string>
+    <string name="fossil_detected_format">Fossil identified: %1$s - %2$s period</string>
+
+    <!-- Sync and Offline Status Messages -->
+    <string name="offline_mode_active">Working offline - Your discoveries will sync when connected</string>
+    <string name="sync_required_message">%1$d discoveries pending synchronization</string>
+
+    <!-- Error Messages -->
+    <string name="error_network_unavailable">Unable to connect. Check your network and try again.</string>
+    <string name="error_detection_failed">Species detection unsuccessful. Please ensure good lighting and try again.</string>
+
+    <!-- Accessibility Descriptions -->
+    <string name="accessibility_camera_viewfinder">Camera viewfinder for wildlife and fossil detection</string>
+    <string name="accessibility_capture_button">Capture image for species identification</string>
+    <string name="accessibility_collection_item">%1$s discovered on %2$s at %3$s</string>
+
+    <!-- Action Buttons -->
+    <string name="action_add_collection">Add to Collection</string>
+    <string name="action_share_discovery">Share Discovery</string>
+    <string name="action_view_details">View Details</string>
+</resources>
