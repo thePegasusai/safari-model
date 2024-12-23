@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Species Item Layout
+    Material Components version: 1.9.0
+    
+    This layout implements the Wildlife Detection Safari Pokédex design system with:
+    - Material Design card components
+    - Accessibility-compliant touch targets and content descriptions
+    - Support for RTL layouts
+    - Proper elevation and state handling
+    - WCAG AAA compliant contrast ratios
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/species_card"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/species_card_height"
+    android:layout_margin="@dimen/spacing_medium"
+    app:cardCornerRadius="@dimen/corner_radius_medium"
+    app:cardElevation="@dimen/elevation_small"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardBackgroundColor="?attr/colorSurface"
+    android:minHeight="@dimen/touch_target_min"
+    android:stateListAnimator="@animator/card_state_list_anim"
+    android:contentDescription="@string/species_card_content_description">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/spacing_medium">
+
+        <!-- Species Image Container with Loading Indicator -->
+        <FrameLayout
+            android:id="@+id/species_image_container"
+            android:layout_width="@dimen/species_image_size"
+            android:layout_height="@dimen/species_image_size"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/species_image"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:importantForAccessibility="no"
+                tools:src="@tools:sample/avatars"/>
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/species_image_loading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminate="true"
+                app:indicatorColor="?attr/colorPrimary"
+                android:visibility="gone"
+                tools:visibility="visible"/>
+        </FrameLayout>
+
+        <!-- Species Information -->
+        <TextView
+            android:id="@+id/species_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/colorOnSurface"
+            android:maxLines="2"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/species_image_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Red-tailed Hawk"/>
+
+        <TextView
+            android:id="@+id/species_scientific_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="italic"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/species_image_container"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/species_name"
+            tools:text="Buteo jamaicensis"/>
+
+        <!-- Conservation Status -->
+        <TextView
+            android:id="@+id/conservation_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:paddingStart="@dimen/spacing_small"
+            android:paddingEnd="@dimen/spacing_small"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:background="@drawable/conservation_status_background"
+            app:layout_constraintStart_toEndOf="@id/species_image_container"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:textColor="?attr/colorOnSurface"
+            tools:text="Least Concern"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
