@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="21754" systemVersion="13.0" minimumToolsVersion="Automatic" sourceLanguage="Swift" usedWithCloudKit="NO" userDefinedModelVersionIdentifier="1.0">
+    <entity name="User" representedClassName="User" syncable="YES">
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="deviceIdentifier" attributeType="String"/>
+        <attribute name="email" attributeType="String"/>
+        <attribute name="encryptedCredentials" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isActive" attributeType="Boolean" defaultValueString="YES" usesScalarValueType="YES"/>
+        <attribute name="lastLoginAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="preferences" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <relationship name="collections" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Collection" inverseName="user" inverseEntity="Collection"/>
+        <fetchIndex name="byDeviceIdentifier">
+            <fetchIndexElement property="deviceIdentifier" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byEmail">
+            <fetchIndexElement property="email" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="email"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <entity name="Collection" representedClassName="Collection" syncable="YES">
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="discoveryCount" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isShared" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="metadata" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="syncStatus" attributeType="String"/>
+        <attribute name="updatedAt" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="discoveries" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Discovery" inverseName="collection" inverseEntity="Discovery"/>
+        <relationship name="user" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="User" inverseName="collections" inverseEntity="User"/>
+    </entity>
+    <entity name="Discovery" representedClassName="Discovery" syncable="YES">
+        <attribute name="altitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="confidence" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="discoveredAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="encryptedImageData" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isVerified" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="latitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="longitude" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="metadata" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="notes" attributeType="String" defaultValueString=""/>
+        <attribute name="syncStatus" attributeType="String"/>
+        <attribute name="weatherConditions" attributeType="String" defaultValueString=""/>
+        <relationship name="collection" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Collection" inverseName="discoveries" inverseEntity="Collection"/>
+        <relationship name="species" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Species" inverseName="discoveries" inverseEntity="Species"/>
+        <fetchIndex name="byDiscoveredAt">
+            <fetchIndexElement property="discoveredAt" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byLocation">
+            <fetchIndexElement property="latitude" type="Binary" order="ascending"/>
+            <fetchIndexElement property="longitude" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="bySyncStatus">
+            <fetchIndexElement property="syncStatus" type="Binary" order="ascending"/>
+        </fetchIndex>
+    </entity>
+    <entity name="Species" representedClassName="Species" syncable="YES">
+        <attribute name="additionalInfo" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="behavior" attributeType="String"/>
+        <attribute name="commonName" attributeType="String"/>
+        <attribute name="conservationStatus" attributeType="String"/>
+        <attribute name="encryptedModelData" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="habitat" attributeType="String"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="isEndangered" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="lastUpdated" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="referenceImages" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="scientificName" attributeType="String"/>
+        <attribute name="taxonomy" attributeType="String"/>
+        <relationship name="discoveries" optional="YES" toMany="YES" deletionRule="Deny" destinationEntity="Discovery" inverseName="species" inverseEntity="Discovery"/>
+        <fetchIndex name="byCommonName">
+            <fetchIndexElement property="commonName" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <fetchIndex name="byConservationStatus">
+            <fetchIndexElement property="conservationStatus" type="Binary" order="ascending"/>
+        </fetchIndex>
+        <uniquenessConstraints>
+            <uniquenessConstraint>
+                <constraint value="scientificName"/>
+            </uniquenessConstraint>
+        </uniquenessConstraints>
+    </entity>
+    <configuration name="Default">
+        <memberEntity name="User"/>
+        <memberEntity name="Collection"/>
+        <memberEntity name="Discovery"/>
+        <memberEntity name="Species"/>
+    </configuration>
+</model>
