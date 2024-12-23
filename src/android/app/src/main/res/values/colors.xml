@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+    Wildlife Detection Safari Pokédex Color Resources
+    MaterialComponents version: 1.9.0
+    
+    Color palette implements WCAG 2.1 AA standards with minimum 4.5:1 contrast ratio
+    All colors support dynamic theming and color blind accessibility
+    Primary palette: Nature-inspired greens (#2E7D32)
+    Secondary palette: Complementary blues (#1565C0)
+-->
+<resources>
+    <!-- Primary Brand Colors -->
+    <color name="primary">#2E7D32</color>
+    <color name="primary_dark">#1B5E20</color>
+    <color name="primary_variant">#388E3C</color>
+
+    <!-- Secondary Brand Colors -->
+    <color name="secondary">#1565C0</color>
+    <color name="secondary_dark">#0D47A1</color>
+    <color name="secondary_variant">#1976D2</color>
+
+    <!-- Background Colors -->
+    <color name="background">#FFFFFF</color>
+    <color name="background_dark">#121212</color>
+
+    <!-- Surface Colors -->
+    <color name="surface">#FFFFFF</color>
+    <color name="surface_dark">#121212</color>
+    <color name="surface_variant">#F5F5F5</color>
+    <color name="surface_variant_dark">#1E1E1E</color>
+
+    <!-- State Colors -->
+    <color name="error">#B00020</color>
+    <color name="error_dark">#CF6679</color>
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FFA000</color>
+    <color name="info">#2196F3</color>
+
+    <!-- On Colors (Contrast Colors for Text/Icons) -->
+    <color name="on_primary">#FFFFFF</color>
+    <color name="on_secondary">#FFFFFF</color>
+    <color name="on_background">#000000</color>
+    <color name="on_background_dark">#FFFFFF</color>
+    <color name="on_surface">#000000</color>
+    <color name="on_surface_dark">#FFFFFF</color>
+    <color name="on_error">#FFFFFF</color>
+
+    <!-- Utility Colors -->
+    <color name="scrim">#000000</color>
+    <color name="ripple">#1F000000</color>
+    <color name="ripple_dark">#1FFFFFFF</color>
+
+    <!-- Material Design Theme Compatibility -->
+    <color name="colorPrimary">@color/primary</color>
+    <color name="colorPrimaryDark">@color/primary_dark</color>
+    <color name="colorPrimaryVariant">@color/primary_variant</color>
+    <color name="colorSecondary">@color/secondary</color>
+    <color name="colorSecondaryVariant">@color/secondary_variant</color>
+    <color name="colorSurface">@color/surface</color>
+    <color name="colorError">@color/error</color>
+    <color name="colorOnPrimary">@color/on_primary</color>
+    <color name="colorOnSecondary">@color/on_secondary</color>
+    <color name="colorOnBackground">@color/on_background</color>
+    <color name="colorOnSurface">@color/on_surface</color>
+    <color name="colorOnError">@color/on_error</color>
+
+    <!-- Status Bar and Navigation Colors -->
+    <color name="status_bar_color">@color/primary_dark</color>
+    <color name="nav_bar_color">@color/surface</color>
+    <color name="nav_bar_color_dark">@color/surface_dark</color>
+
+    <!-- Semantic Colors -->
+    <color name="camera_overlay">#4D000000</color>
+    <color name="species_card_background">@color/surface</color>
+    <color name="collection_grid_background">@color/background</color>
+    <color name="detection_highlight">#4D4CAF50</color>
+    <color name="fossil_scan_guide">#4D1565C0</color>
+</resources>
