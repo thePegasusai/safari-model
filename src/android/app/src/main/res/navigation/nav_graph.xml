@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/cameraFragment">
+
+    <!-- Camera Fragment - Main wildlife detection screen -->
+    <fragment
+        android:id="@+id/cameraFragment"
+        android:name="com.wildlifesafari.app.ui.camera.CameraFragment"
+        android:label="@string/camera_screen_title"
+        tools:layout="@layout/fragment_camera">
+        
+        <deepLink app:uri="wildlifesafari://camera" />
+        
+        <action
+            android:id="@+id/action_camera_to_species_detail"
+            app:destination="@id/speciesDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="speciesId"
+                app:argType="string" />
+        </action>
+
+        <action
+            android:id="@+id/action_camera_to_fossil_scan"
+            app:destination="@id/fossilScanFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+
+    <!-- Collection Fragment - User's wildlife collection management -->
+    <fragment
+        android:id="@+id/collectionFragment"
+        android:name="com.wildlifesafari.app.ui.collection.CollectionFragment"
+        android:label="@string/collections_screen_title"
+        tools:layout="@layout/fragment_collection">
+        
+        <deepLink app:uri="wildlifesafari://collection" />
+        
+        <action
+            android:id="@+id/action_collection_to_species_detail"
+            app:destination="@id/speciesDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="speciesId"
+                app:argType="string" />
+            <argument
+                android:name="source"
+                app:argType="string"
+                android:defaultValue="collection" />
+        </action>
+    </fragment>
+
+    <!-- Map Fragment - Discovery locations visualization -->
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.wildlifesafari.app.ui.map.MapFragment"
+        android:label="@string/map_screen_title"
+        tools:layout="@layout/fragment_map">
+        
+        <deepLink app:uri="wildlifesafari://map" />
+        
+        <action
+            android:id="@+id/action_map_to_species_detail"
+            app:destination="@id/speciesDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="speciesId"
+                app:argType="string" />
+            <argument
+                android:name="source"
+                app:argType="string"
+                android:defaultValue="map" />
+        </action>
+    </fragment>
+
+    <!-- Profile Fragment - User profile and settings -->
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.wildlifesafari.app.ui.profile.ProfileFragment"
+        android:label="@string/profile_screen_title"
+        tools:layout="@layout/fragment_profile">
+        
+        <deepLink app:uri="wildlifesafari://profile" />
+    </fragment>
+
+    <!-- Species Detail Fragment - Detailed species information -->
+    <fragment
+        android:id="@+id/speciesDetailFragment"
+        android:name="com.wildlifesafari.app.ui.species.SpeciesDetailFragment"
+        android:label="@string/species_detail_screen_title"
+        tools:layout="@layout/fragment_species_detail">
+        
+        <deepLink app:uri="wildlifesafari://species/{speciesId}" />
+        
+        <argument
+            android:name="speciesId"
+            app:argType="string" />
+        <argument
+            android:name="source"
+            app:argType="string"
+            app:nullable="true" />
+    </fragment>
+
+    <!-- Fossil Scan Fragment - 3D fossil scanning -->
+    <fragment
+        android:id="@+id/fossilScanFragment"
+        android:name="com.wildlifesafari.app.ui.fossil.FossilScanFragment"
+        android:label="@string/fossil_scan_screen_title"
+        tools:layout="@layout/fragment_fossil_scan">
+        
+        <deepLink app:uri="wildlifesafari://fossil" />
+        
+        <action
+            android:id="@+id/action_fossil_scan_to_species_detail"
+            app:destination="@id/speciesDetailFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right">
+            <argument
+                android:name="speciesId"
+                app:argType="string" />
+            <argument
+                android:name="source"
+                app:argType="string"
+                android:defaultValue="fossil" />
+        </action>
+    </fragment>
+
+</navigation>
