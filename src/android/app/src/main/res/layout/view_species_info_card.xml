@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Species Information Card Layout
+    Material Components version: 1.9.0
+    
+    This layout implements a Material Design card component for displaying species information
+    with proper accessibility support and theming compatibility.
+    
+    Accessibility Features:
+    - Minimum touch targets of 48dp
+    - Content descriptions for images
+    - Proper text contrast ratios
+    - TalkBack support with meaningful labels
+    - Start-aligned text for RTL support
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/species_card_height"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="@dimen/corner_radius_medium"
+    app:cardElevation="@dimen/elevation_medium"
+    app:cardBackgroundColor="@color/surface"
+    android:minHeight="@dimen/touch_target_min"
+    android:contentDescription="@string/species_card_description">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/spacing_medium">
+
+        <ImageView
+            android:id="@+id/species_image"
+            android:layout_width="@dimen/species_image_size"
+            android:layout_height="@dimen/species_image_size"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:contentDescription="@string/species_image_description"
+            android:importantForAccessibility="yes"
+            tools:src="@tools:sample/avatars"/>
+
+        <TextView
+            android:id="@+id/common_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="@color/on_surface"
+            android:textAlignment="viewStart"
+            app:layout_constraintStart_toEndOf="@id/species_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/species_image"
+            android:accessibilityHeading="true"
+            tools:text="Red-tailed Hawk"/>
+
+        <TextView
+            android:id="@+id/scientific_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textStyle="italic"
+            android:textColor="@color/on_surface_medium"
+            android:textAlignment="viewStart"
+            app:layout_constraintStart_toStartOf="@id/common_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/common_name"
+            android:layout_marginTop="@dimen/spacing_small"
+            tools:text="Buteo jamaicensis"/>
+
+        <TextView
+            android:id="@+id/conservation_status_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/conservation_status_label"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="@color/on_surface"
+            android:textAlignment="viewStart"
+            app:layout_constraintStart_toStartOf="@id/common_name"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+        <TextView
+            android:id="@+id/conservation_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="@color/on_surface"
+            android:textAlignment="viewStart"
+            android:layout_marginStart="@dimen/spacing_small"
+            app:layout_constraintStart_toEndOf="@id/conservation_status_label"
+            app:layout_constraintBaseline_toBaselineOf="@id/conservation_status_label"
+            tools:text="Least Concern"/>
+
+        <ProgressBar
+            android:id="@+id/conservation_status_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:minHeight="4dp"
+            android:progressBackgroundTint="@color/surface_variant"
+            android:progressTint="@color/primary"
+            app:layout_constraintStart_toEndOf="@id/conservation_status"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/conservation_status"
+            app:layout_constraintTop_toTopOf="@id/conservation_status"
+            android:importantForAccessibility="no"
+            tools:progress="70"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
