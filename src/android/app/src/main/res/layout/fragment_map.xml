@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Map Fragment Layout
+    Material Components version: 1.9.0
+    Google Maps version: 18.1.0
+    
+    This layout implements an interactive map view for displaying wildlife discoveries
+    and hotspots with proper accessibility support and performance optimizations.
+    
+    Accessibility Features:
+    - Minimum touch targets of 48dp for all interactive elements
+    - Content descriptions for all meaningful elements
+    - Support for TalkBack navigation
+    - High contrast color scheme
+    
+    Performance Optimizations:
+    - ConstraintLayout for flat view hierarchy
+    - Hardware acceleration enabled
+    - Map lite mode available for low-end devices
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:fitsSystemWindows="true"
+    android:importantForAccessibility="yes">
+
+    <!-- Map View with clustering support -->
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/map_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="@string/map_content_description"
+        android:importantForAccessibility="yes"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:mapType="normal"
+        app:liteMode="false"
+        app:uiCompass="true"
+        app:uiRotateGestures="true"
+        app:uiScrollGestures="true"
+        app:uiTiltGestures="true"
+        app:uiZoomControls="false"
+        app:uiZoomGestures="true" />
+
+    <!-- Location control FAB -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/location_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_medium"
+        android:contentDescription="@string/location_fab_description"
+        android:minHeight="@dimen/touch_target_min"
+        android:minWidth="@dimen/touch_target_min"
+        app:backgroundTint="@color/surface"
+        app:elevation="@dimen/elevation_medium"
+        app:fabSize="normal"
+        app:layout_constraintBottom_toTopOf="@id/species_info_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_location"
+        app:tint="@color/on_surface" />
+
+    <!-- Container for species info bottom sheet -->
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/species_info_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Species info card with bottom sheet behavior -->
+        <include
+            android:id="@+id/species_info_card"
+            layout="@layout/view_species_info_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_medium"
+            app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+            app:behavior_hideable="true"
+            app:behavior_peekHeight="0dp"
+            app:behavior_skipCollapsed="false" />
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <!-- Map overlay for discovery clustering -->
+    <View
+        android:id="@+id/map_overlay"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/scrim"
+        android:alpha="0"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:alpha="0.3"
+        tools:visibility="visible" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
