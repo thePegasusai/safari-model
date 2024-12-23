@@ -1,0 +1,47 @@
+# SwiftGen Configuration v6.6.0
+# Generates type-safe Swift code for app resources including strings, assets, and colors
+
+# Global configuration
+output_dir: Generated
+template_path: Templates
+
+# Strings configuration - Localized string resources
+strings:
+  inputs:
+    - Resources/Localizable.strings
+  outputs:
+    templateName: structured-swift5
+    output: Generated/Strings.swift
+    params:
+      enumName: L10n
+      publicAccess: true
+      noComments: false
+      validationEnabled: true  # Enable validation for string format specifiers
+
+# XCAssets configuration - Image assets and icon sets
+xcassets:
+  inputs:
+    - Resources/Assets.xcassets
+  outputs:
+    templateName: swift5
+    output: Generated/Assets.swift
+    params:
+      enumName: Asset
+      publicAccess: true
+      forceProvidesNamespaces: true  # Enable namespacing for organized asset access
+      preserveScale: true  # Preserve image scale information
+      imageTypeName: SafariImage  # Custom type name for generated image assets
+
+# Colors configuration - Color assets with dark mode support
+colors:
+  inputs:
+    - Resources/Colors.xcassets
+  outputs:
+    templateName: swift5
+    output: Generated/Colors.swift
+    params:
+      enumName: ColorAsset
+      publicAccess: true
+      forceProvidesNamespaces: true  # Enable namespacing for organized color access
+      colorTypeName: SafariColor  # Custom type name for generated color assets
+      supportsDynamic: true  # Enable dynamic color support for dark mode
