@@ -1,0 +1,184 @@
+name: Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+  JAVA_VERSION: '17'
+  GO_VERSION: '1.21'
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+  ECR_REGISTRY: ${{ secrets.ECR_REGISTRY }}
+  BLUE_GREEN_TIMEOUT: '300'
+
+jobs:
+  validate:
+    name: Validate Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          lfs: true
+
+      - name: Validate version tag
+        run: |
+          if [[ ! ${{ github.ref_name }} =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Invalid version tag format. Must be v*.*.* (e.g., v1.0.0)"
+            exit 1
+          fi
+
+      - name: Run security scan
+        uses: aquasecurity/trivy-action@v1
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+  build-mobile:
+    name: Build Mobile Apps
+    needs: validate
+    strategy:
+      matrix:
+        platform: [ios, android]
+    runs-on: ${{ matrix.platform == 'ios' && 'macos-13' || 'ubuntu-latest' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build iOS App
+        if: matrix.platform == 'ios'
+        uses: ./.github/workflows/ios-ci.yml
+        with:
+          build-and-test: true
+          configuration: Release
+
+      - name: Build Android App
+        if: matrix.platform == 'android'
+        uses: ./.github/workflows/android-ci.yml
+        with:
+          build: true
+          configuration: Release
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.platform }}-artifacts
+          path: |
+            ${{ matrix.platform == 'ios' && 'build/WildlifeSafari-release.ipa' || 'app/build/outputs/apk/release/*.apk' }}
+          if-no-files-found: error
+
+  build-backend:
+    name: Build Backend Services
+    needs: validate
+    uses: ./.github/workflows/backend-ci.yml
+    with:
+      build-containers: true
+      push-images: true
+      version: ${{ github.ref_name }}
+
+  deploy-backend:
+    name: Deploy Backend
+    needs: build-backend
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Deploy Green Environment
+        run: |
+          kubectl apply -f kubernetes/blue-green/green-deployment.yml
+          kubectl rollout status deployment/wildlife-safari-green -n production --timeout=${{ env.BLUE_GREEN_TIMEOUT }}s
+
+      - name: Health Check Green Environment
+        run: |
+          endpoint=$(kubectl get svc wildlife-safari-green -n production -o jsonpath='{.status.loadBalancer.ingress[0].hostname}')
+          for i in {1..30}; do
+            if curl -f "http://$endpoint/health"; then
+              exit 0
+            fi
+            sleep 10
+          done
+          exit 1
+
+      - name: Switch Traffic
+        run: |
+          kubectl apply -f kubernetes/blue-green/service-switch.yml
+          
+      - name: Verify Deployment
+        run: |
+          kubectl get pods -n production -l version=${{ github.ref_name }}
+          
+  deploy-mobile:
+    name: Deploy Mobile Apps
+    needs: build-mobile
+    runs-on: ubuntu-latest
+    environment: production
+    strategy:
+      matrix:
+        platform: [ios, android]
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ matrix.platform }}-artifacts
+
+      - name: Deploy to App Store
+        if: matrix.platform == 'ios'
+        run: |
+          bundle exec fastlane ios deploy_appstore \
+            ipa:"WildlifeSafari-release.ipa" \
+            skip_metadata:false \
+            skip_screenshots:true \
+            force:true \
+            submit_for_review:true
+
+      - name: Deploy to Play Store
+        if: matrix.platform == 'android'
+        run: |
+          bundle exec fastlane android deploy_play_store \
+            aab:"app-release.aab" \
+            track:production \
+            rollout:0.1
+
+  create-release:
+    name: Create GitHub Release
+    needs: [deploy-backend, deploy-mobile]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Release ${{ github.ref_name }}
+          body_path: CHANGELOG.md
+          draft: false
+          prerelease: false
+          files: |
+            ios-artifacts/*
+            android-artifacts/*
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  notify:
+    name: Send Notifications
+    needs: create-release
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Notify Slack
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
