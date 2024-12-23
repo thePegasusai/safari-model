@@ -1,0 +1,102 @@
+# Stage 1: Builder stage
+FROM python:3.11-slim AS builder
+
+# Version tracking comment
+# python:3.11-slim - Base Python image for builder stage
+# nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04 - CUDA runtime for GPU acceleration
+
+# Set build arguments and environment variables
+ARG DEBIAN_FRONTEND=noninteractive
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+
+# Install build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory and user
+RUN useradd -m -s /bin/bash -u 1000 appuser && \
+    mkdir -p /app && \
+    chown appuser:appuser /app
+
+# Set working directory
+WORKDIR /app
+
+# Copy requirements file
+COPY --chown=appuser:appuser ./detection-service/requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Stage 2: Runtime stage
+FROM nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04 AS runtime
+
+# Set environment variables for runtime
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PORT=8000 \
+    MODEL_PATH=/app/models \
+    CUDA_VISIBLE_DEVICES=0 \
+    LNN_LAYER_SIZE=1024 \
+    LNN_TIME_CONSTANTS=10,100 \
+    BATCH_SIZE=32 \
+    INPUT_RESOLUTION=640 \
+    MAX_MEMORY=8g \
+    NUM_WORKERS=4
+
+# Install runtime dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    python3.11 \
+    python3-pip \
+    libpython3.11 \
+    libgomp1 \
+    && rm -rf /var/lib/apt/lists/* \
+    && ln -s /usr/bin/python3.11 /usr/bin/python
+
+# Create app directory and user
+RUN useradd -m -s /bin/bash -u 1000 appuser && \
+    mkdir -p /app/models && \
+    mkdir -p /app/logs && \
+    chown -R appuser:appuser /app
+
+# Set working directory
+WORKDIR /app
+
+# Copy built dependencies from builder stage
+COPY --from=builder --chown=appuser:appuser /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+
+# Copy application code
+COPY --chown=appuser:appuser ./detection-service/src /app/src
+
+# Set up model directory
+VOLUME ["/app/models"]
+
+# Switch to non-root user
+USER appuser
+
+# Set up health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:${PORT}/health || exit 1
+
+# Configure resource limits
+ENV NVIDIA_VISIBLE_DEVICES=all \
+    NVIDIA_DRIVER_CAPABILITIES=compute,utility \
+    NVIDIA_REQUIRE_CUDA="cuda>=11.8"
+
+# Set up logging
+ENV LOG_LEVEL=INFO \
+    LOG_FORMAT=json
+
+# Expose port
+EXPOSE ${PORT}
+
+# Set entrypoint with proper signal handling
+ENTRYPOINT ["python", "-m", "src.app"]
+
+# Default command
+CMD ["--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
