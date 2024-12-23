@@ -1,0 +1,196 @@
+name: Backend CI Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/backend/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'src/backend/**'
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+  JAVA_VERSION: '17'
+  GO_VERSION: '1.21'
+  COVERAGE_THRESHOLD: '80'
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ${{ github.repository }}
+
+jobs:
+  lint-test:
+    name: Lint and Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [detection, collection, auth, sync]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        if: matrix.service == 'detection'
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+
+      - name: Setup Node.js
+        if: matrix.service == 'collection'
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Setup Java
+        if: matrix.service == 'auth'
+        uses: actions/setup-java@v3
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Go
+        if: matrix.service == 'sync'
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+
+      - name: Install Python dependencies
+        if: matrix.service == 'detection'
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r src/backend/detection-service/requirements.txt
+          pip install pylint black mypy
+
+      - name: Install Node.js dependencies
+        if: matrix.service == 'collection'
+        run: |
+          cd src/backend/collection-service
+          npm ci
+
+      - name: Run linting
+        run: |
+          if [ "${{ matrix.service }}" = "detection" ]; then
+            pylint src/backend/detection-service
+            black --check src/backend/detection-service
+            mypy src/backend/detection-service
+          elif [ "${{ matrix.service }}" = "collection" ]; then
+            cd src/backend/collection-service
+            npm run lint
+          elif [ "${{ matrix.service }}" = "auth" ]; then
+            cd src/backend/auth-service
+            ./gradlew checkstyleMain
+          elif [ "${{ matrix.service }}" = "sync" ]; then
+            cd src/backend/sync-service
+            go vet ./...
+            golangci-lint run
+          fi
+
+      - name: Run tests with coverage
+        run: |
+          if [ "${{ matrix.service }}" = "detection" ]; then
+            pytest src/backend/detection-service --cov --cov-report=xml
+          elif [ "${{ matrix.service }}" = "collection" ]; then
+            cd src/backend/collection-service
+            npm test -- --coverage
+          elif [ "${{ matrix.service }}" = "auth" ]; then
+            cd src/backend/auth-service
+            ./gradlew test jacocoTestReport
+          elif [ "${{ matrix.service }}" = "sync" ]; then
+            cd src/backend/sync-service
+            go test -race -coverprofile=coverage.txt -covermode=atomic ./...
+          fi
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: ${{ matrix.service == 'detection' && 'coverage.xml' || 'coverage.txt' }}
+          flags: ${{ matrix.service }}
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: lint-test
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Snyk
+        uses: snyk/actions/setup@v1
+        env:
+          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+
+      - name: Run Snyk security scan
+        run: |
+          snyk test src/backend/detection-service
+          snyk test src/backend/collection-service
+          snyk test src/backend/auth-service
+          snyk test src/backend/sync-service
+        continue-on-error: false
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasec/trivy-action@v1
+        with:
+          scan-type: 'fs'
+          scan-ref: 'src/backend'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
+  build-containers:
+    name: Build and Push Containers
+    runs-on: ubuntu-latest
+    needs: [lint-test, security-scan]
+    strategy:
+      matrix:
+        service: [auth, collection, detection, sync]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        run: |
+          echo "::set-output name=version::$(git rev-parse --short HEAD)"
+          echo "::set-output name=created::$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: src/backend
+          file: src/backend/Dockerfile.${{ matrix.service }}
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ steps.meta.outputs.version }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            BUILD_VERSION=${{ steps.meta.outputs.version }}
+            BUILD_DATE=${{ steps.meta.outputs.created }}
+
+      - name: Scan container image
+        uses: aquasec/trivy-action@v1
+        with:
+          image-ref: ${{ env.REGISTRY }}/${{ env.IMAGE_PREFIX }}/${{ matrix.service }}:${{ steps.meta.outputs.version }}
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
