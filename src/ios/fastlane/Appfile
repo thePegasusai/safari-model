@@ -1,0 +1,19 @@
+# fastlane 2.217.0
+
+# The bundle identifier of your iOS application
+app_identifier("com.wildlifesafari.pokedex")
+
+# Your Apple Developer Portal username/email
+# Stored securely in environment variables
+apple_id(ENV['APPLE_DEVELOPER_EMAIL'])
+
+# Your Apple Developer team ID
+# Stored securely in environment variables
+team_id(ENV['APPLE_TEAM_ID'])
+
+# Your App Store Connect team ID if different from Developer team ID
+# Stored securely in environment variables
+itc_team_id(ENV['APPSTORE_TEAM_ID'])
+
+# For more information about the Appfile, see:
+# https://docs.fastlane.tools/advanced/#appfile
