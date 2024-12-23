@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Bottom Navigation Menu for Wildlife Detection Safari Pokédex
+    Version: 1.0
+    
+    Features:
+    - Four main navigation sections: Camera, Collection, Map, Profile
+    - Material Design compliant icons (24dp x 24dp)
+    - Accessibility-optimized with content descriptions
+    - Supports landscape/portrait modes
+    - Minimum touch target size: 48dp
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Camera tab for wildlife detection -->
+    <item
+        android:id="@+id/navigation_camera"
+        android:icon="@drawable/ic_camera"
+        android:title="@string/title_camera"
+        android:contentDescription="@string/camera_tab_description"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom" />
+
+    <!-- Collection tab for discoveries -->
+    <item
+        android:id="@+id/navigation_collection"
+        android:icon="@drawable/ic_collection"
+        android:title="@string/title_collection"
+        android:contentDescription="@string/collection_tab_description"
+        android:orderInCategory="2"
+        app:showAsAction="ifRoom" />
+
+    <!-- Map tab for locations -->
+    <item
+        android:id="@+id/navigation_map"
+        android:icon="@drawable/ic_map"
+        android:title="@string/title_map"
+        android:contentDescription="@string/map_tab_description"
+        android:orderInCategory="3"
+        app:showAsAction="ifRoom" />
+
+    <!-- Profile tab for settings -->
+    <item
+        android:id="@+id/navigation_profile"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/title_profile"
+        android:contentDescription="@string/profile_tab_description"
+        android:orderInCategory="4"
+        app:showAsAction="ifRoom" />
+
+</menu>
