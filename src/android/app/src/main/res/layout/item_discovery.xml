@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Discovery Item Layout
+    Material Components version: 1.9.0
+    
+    This layout implements:
+    - Material Design card components for consistent elevation and styling
+    - Accessibility requirements (48dp touch targets, proper contrast)
+    - Efficient ConstraintLayout for optimal performance
+    - Data binding support for DiscoveryModel
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_medium"
+    android:minHeight="@dimen/touch_target_min"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="@dimen/corner_radius_medium"
+    app:cardElevation="@dimen/elevation_small"
+    app:cardBackgroundColor="@color/surface">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_medium">
+
+        <ImageView
+            android:id="@+id/discovery_image"
+            android:layout_width="@dimen/species_image_size"
+            android:layout_height="@dimen/species_image_size"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/discovery_image_description"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:src="@tools:sample/avatars"/>
+
+        <TextView
+            android:id="@+id/species_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="@color/on_surface"
+            android:maxLines="1"
+            android:ellipsize="end"
+            android:importantForAccessibility="yes"
+            app:layout_constraintStart_toEndOf="@id/discovery_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Red-tailed Hawk"/>
+
+        <TextView
+            android:id="@+id/scientific_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="@color/on_surface_variant"
+            android:textStyle="italic"
+            android:maxLines="1"
+            android:ellipsize="end"
+            app:layout_constraintStart_toEndOf="@id/discovery_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/species_name"
+            tools:text="Buteo jamaicensis"/>
+
+        <TextView
+            android:id="@+id/confidence_score"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="@color/primary"
+            android:importantForAccessibility="yes"
+            app:layout_constraintStart_toEndOf="@id/discovery_image"
+            app:layout_constraintTop_toBottomOf="@id/scientific_name"
+            tools:text="Confidence: 95.5%"/>
+
+        <TextView
+            android:id="@+id/discovery_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:textAppearance="?attr/textAppearanceCaption"
+            android:textColor="@color/on_surface_variant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scientific_name"
+            tools:text="2024-01-20"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
