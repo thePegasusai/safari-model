@@ -1,0 +1,17 @@
+/* App Display Name */
+"CFBundleDisplayName" = "Wildlife Safari";
+
+/* Camera Permission - Required for wildlife detection and AR features */
+"NSCameraUsageDescription" = "Wildlife Safari needs camera access to detect and identify wildlife species and fossils using advanced AR and LNN technology. This enables real-time species recognition and 3D fossil scanning for your discoveries.";
+
+/* Location When In Use Permission - Required for discovery mapping */
+"NSLocationWhenInUseUsageDescription" = "Your location helps map wildlife discoveries, track species distributions, and find nearby wildlife hotspots. This data contributes to global biodiversity research while protecting sensitive species information.";
+
+/* Location Always Permission - Optional background features */
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Optional background location access enables Wildlife Safari to track species movements and notify you of nearby wildlife opportunities. This helps contribute to research while maintaining your privacy preferences.";
+
+/* Face ID Permission - Secure access to personal data */
+"NSFaceIDUsageDescription" = "Face ID provides secure, encrypted access to your personal wildlife collection and discovery history, ensuring your scientific contributions remain private and protected.";
+
+/* Photo Library Permission - Required for saving discoveries */
+"NSPhotoLibraryUsageDescription" = "Photo library access allows you to save, manage, and securely share your wildlife discoveries and 3D fossil scans while maintaining full control over your data.";
