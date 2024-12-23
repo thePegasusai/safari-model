@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Slide-in animation from left edge combined with fade-in effect
+    Used for fragment navigation transitions when navigating back
+    
+    Duration: 250ms (within 200-300ms design spec)
+    Interpolator: accelerateDecelerate for natural motion
+    Hardware acceleration: enabled
+    Accessibility: Respects system animation settings
+-->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:ordering="together"
+    android:shareInterpolator="true">
+
+    <!-- Translate animation from -100% (off screen left) to 0 (original position) -->
+    <translate
+        android:duration="250"
+        android:fromXDelta="-100%p"
+        android:toXDelta="0"
+        android:interpolator="@android:interpolator/accelerate_decelerate"
+        android:fillAfter="true" />
+
+    <!-- Fade-in animation from 50% to 100% opacity -->
+    <alpha
+        android:duration="250"
+        android:fromAlpha="0.5"
+        android:toAlpha="1.0"
+        android:interpolator="@android:interpolator/accelerate_decelerate"
+        android:fillAfter="true" />
+
+</set>
