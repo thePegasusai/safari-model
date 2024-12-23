@@ -1,0 +1,171 @@
+version: "3.8"
+
+services:
+  api_gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    ports:
+      - "8000:8000"  # Application port
+      - "9228:9229"  # Debug port
+    environment:
+      - NODE_ENV=development
+      - PORT=8000
+      - DEBUG=true
+      - LOG_LEVEL=debug
+    volumes:
+      - ./api-gateway:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - auth_service
+      - collection_service
+      - detection_service
+      - sync_service
+    networks:
+      - backend
+
+  auth_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.auth
+    ports:
+      - "8001:8001"  # Application port
+      - "5005:5005"  # Java debug port
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - JAVA_OPTS=-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005
+      - LOG_LEVEL=DEBUG
+    volumes:
+      - ./auth-service:/app
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - backend
+
+  detection_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.detection
+    ports:
+      - "8003:8003"  # Application port
+      - "5678:5678"  # Python debug port
+    environment:
+      - PYTHON_ENV=development
+      - MODEL_PATH=/opt/models
+      - CUDA_VISIBLE_DEVICES=0
+      - DEBUG=1
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./detection-service:/app
+      - ./models:/opt/models
+    command: python -m debugpy --listen 0.0.0.0:5678 -m uvicorn src.app:app --reload --host 0.0.0.0 --port 8003
+    depends_on:
+      - redis
+    networks:
+      - backend
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  collection_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.collection
+    ports:
+      - "8002:8002"  # Application port
+      - "9229:9229"  # Node.js debug port
+    environment:
+      - NODE_ENV=development
+      - PORT=8002
+      - DEBUG=app:*
+      - NODE_OPTIONS=--inspect=0.0.0.0:9229
+    volumes:
+      - ./collection-service:/app
+      - /app/node_modules
+    command: npm run dev
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - backend
+
+  sync_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.sync
+    ports:
+      - "8004:8004"  # Application port
+      - "2345:2345"  # Go delve debugger port
+    environment:
+      - GO_ENV=development
+      - PORT=8004
+      - DEBUG=1
+      - GIN_MODE=debug
+    volumes:
+      - ./sync-service:/app
+    security_opt:
+      - seccomp:unconfined
+    command: dlv debug --headless --listen=:2345 --api-version=2 --accept-multiclient ./cmd/sync/main.go
+    depends_on:
+      - postgres
+      - rabbitmq
+    networks:
+      - backend
+
+  postgres:
+    image: postgres:15
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=wildlife_safari_dev
+      - POSTGRES_USER=dev_user
+      - POSTGRES_PASSWORD=dev_password
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - backend
+
+  redis:
+    image: redis:7.0-alpine
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --loglevel debug
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
+
+  rabbitmq:
+    image: rabbitmq:3.11-management
+    ports:
+      - "5672:5672"   # AMQP port
+      - "15672:15672" # Management UI port
+    environment:
+      - RABBITMQ_DEFAULT_USER=dev_user
+      - RABBITMQ_DEFAULT_PASS=dev_password
+      - RABBITMQ_SERVER_ADDITIONAL_ERL_ARGS=-rabbit log_levels [{connection,debug}]
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - backend
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+
+networks:
+  backend:
+    driver: bridge
+    name: wildlife_safari_dev_network
