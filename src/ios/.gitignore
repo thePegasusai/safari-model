@@ -1,0 +1,78 @@
+# Dependencies
+Pods/
+Carthage/
+.swiftpm/
+Package.resolved
+node_modules/
+
+# Build artifacts
+build/
+DerivedData/
+*.ipa
+*.app.dSYM.zip
+*.app
+*.xcarchive
+*.hmap
+*.dSYM.zip
+*.dSYM
+
+# Xcode IDE files
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+*.xcworkspace/xcshareddata/IDEWorkspaceChecks.plist
+*.xcworkspace/xcshareddata/*.xccheckout
+*.xcworkspace/xcshareddata/*.xcscmblueprint
+timeline.xctimeline
+playground.xcworkspace
+
+# macOS system files
+.DS_Store
+*.swp
+*~.nib
+
+# Xcode legacy files
+*.pbxuser
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+*.moved-aside
+
+# Secrets and configuration
+*.mobileprovision
+*.cer
+*.p12
+*.key
+GoogleService-Info.plist
+Keys.plist
+Secrets.plist
+.env
+APIKeys.plist
+AuthConfig.plist
+MLConfig.plist
+iNaturalist.plist
+GBIF.plist
+DinoData.plist
+
+# Testing and reports
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/**/*.png
+fastlane/test_output
+test-reports/
+coverage/
+sonarqube-reports/
+
+# Machine Learning Models
+*.mlmodel
+*.mlpackage
+*.tflite
+*.mlmodelc
+LNNModels/*.bin
+LNNModels/checkpoints/
+ModelWeights/*.data
+TrainedModels/
+SpeciesClassifier.mlmodel
+FossilDetector.mlmodel
+WildlifeDetector.tflite
