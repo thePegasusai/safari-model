@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Flash off mode icon vector drawable
+    Size: 24dp x 24dp
+    Viewport: 24.0 x 24.0
+    Used in camera interface to indicate and toggle flash off state
+    Follows Material Design guidelines for icon design
+    
+    Version: 1.0
+    Theme-aware with dynamic tinting via ?attr/colorControlNormal
+    Optimized vector paths for efficient rendering
+    Supports RTL layouts and high contrast modes
+    Minimum touch target: 48dp when used in interactive elements
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0"
+    android:tint="?attr/colorControlNormal"
+    android:autoMirrored="true">
+
+    <path
+        android:name="flash_off_icon"
+        android:fillColor="@android:color/white"
+        android:pathData="M16.12,11.5L17.5,10.12L13.88,6.5L15,5.38L13.62,4L12.5,5.12L9.5,2.12L8.12,3.5L12.12,7.5L11,8.62L12.38,10L13.5,8.88L16.12,11.5M3.88,2.12L2.5,3.5L7.88,8.88L3,14.88V21H9L13.88,15.12L19.5,20.74L20.88,19.36L3.88,2.12Z"
+        android:strokeWidth="1"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round" />
+
+</vector>
