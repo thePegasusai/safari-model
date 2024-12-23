@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Fossil Scanning Interface Layout
+    Version: 1.0
+    
+    Features:
+    - Real-time camera preview with AR overlay
+    - 3D fossil model visualization
+    - Advanced scanning controls
+    - Material Design 3.0 components
+    - WCAG 2.1 AA compliant accessibility
+    - Proper elevation and motion design
+    - Efficient view hierarchy
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fossil_scan_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:keepScreenOn="true"
+    android:background="@color/background">
+
+    <!-- Camera Preview with AR Support -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/camera_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/camera_preview_description"
+        app:scaleType="fillStart"
+        app:implementationMode="performance"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- AR Scene View for 3D Model Visualization -->
+    <com.google.ar.sceneform.SceneView
+        android:id="@+id/ar_scene_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:contentDescription="@string/ar_view_description"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Fossil Information Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/fossil_info_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        android:elevation="8dp"
+        android:contentDescription="@string/fossil_info_description"
+        app:cardCornerRadius="12dp"
+        app:cardBackgroundColor="@color/surface"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Fossil Name -->
+            <TextView
+                android:id="@+id/fossil_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textColor="@color/on_surface"
+                tools:text="Tyrannosaurus Rex Skull"/>
+
+            <!-- Period Information -->
+            <TextView
+                android:id="@+id/fossil_period"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?attr/textAppearanceBody1"
+                android:textColor="@color/on_surface"
+                tools:text="Late Cretaceous"/>
+
+            <!-- Measurements -->
+            <TextView
+                android:id="@+id/fossil_measurements"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="@color/on_surface"
+                tools:text="Length: 1.5m | Height: 1.2m"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Camera Controls Include -->
+    <include
+        android:id="@+id/camera_controls"
+        layout="@layout/view_camera_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <!-- Scanning Progress Indicator -->
+    <com.google.android.material.progressindicator.CircularProgressIndicator
+        android:id="@+id/scanning_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:visibility="gone"
+        app:indicatorSize="48dp"
+        app:trackThickness="4dp"
+        app:indicatorColor="@color/secondary"
+        app:trackColor="@color/surface_variant"
+        android:contentDescription="@string/scanning_progress_description"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- AR Guidance Overlay -->
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/ar_guidance_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:padding="8dp"
+        android:background="@drawable/guidance_background"
+        android:textColor="@color/on_surface"
+        android:textAppearance="?attr/textAppearanceBody2"
+        android:visibility="gone"
+        android:text="@string/ar_guidance_text"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- 3D Model Controls -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/model_controls"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:visibility="gone"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <!-- Rotate Model Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/rotate_model_button"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:contentDescription="@string/rotate_model_description"
+                app:icon="@drawable/ic_rotate_3d"
+                app:iconTint="@color/on_surface"/>
+
+            <!-- Scale Model Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/scale_model_button"
+                style="@style/Widget.Material3.Button.IconButton"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="@string/scale_model_description"
+                app:icon="@drawable/ic_scale"
+                app:iconTint="@color/on_surface"/>
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
