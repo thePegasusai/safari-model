@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Camera Controls Layout for Wildlife Detection Safari Pokédex
+    Version: 1.0
+    
+    Features:
+    - Material Design 3.0 components with proper elevation and spacing
+    - WCAG 2.1 AA compliant with minimum 48dp touch targets
+    - RTL support through constraint layout
+    - Proper content descriptions for accessibility
+    - State animations for interactive feedback
+    - Efficient layout hierarchy for performance
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:clipChildren="false"
+    android:clipToPadding="false"
+    android:padding="@dimen/spacing_standard"
+    android:importantForAccessibility="yes">
+
+    <!-- Flash Mode Toggle Button
+         - 48dp minimum touch target
+         - Top-start aligned
+         - Supports state list animator for feedback -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/flash_mode_button"
+        style="@style/Widget.Material3.Button.IconButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:contentDescription="@string/flash_mode_button_description"
+        android:stateListAnimator="@animator/button_state_list_anim"
+        app:icon="@drawable/ic_flash_auto"
+        app:iconTint="@color/on_surface"
+        app:iconSize="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <!-- Detection Mode Toggle Button
+         - 48dp minimum height
+         - Top-end aligned
+         - Proper padding for text content -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/mode_toggle_button"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="48dp"
+        android:minHeight="48dp"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:text="@string/mode_wildlife"
+        android:textColor="@color/on_surface"
+        android:contentDescription="@string/mode_toggle_button_description"
+        android:stateListAnimator="@animator/button_state_list_anim"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="TouchTargetSizeCheck" />
+
+    <!-- Capture Button
+         - 64dp size for prominent touch target
+         - Centered at bottom
+         - Elevated with shadow
+         - Custom state animations -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/capture_button"
+        style="@style/Widget.Material3.Button.IconButton.Filled.Circle"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:contentDescription="@string/capture_button_description"
+        android:stateListAnimator="@animator/capture_button_state_list_anim"
+        app:icon="@drawable/ic_camera"
+        app:iconSize="32dp"
+        app:iconTint="@color/on_primary"
+        app:elevation="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/flash_mode_button"
+        app:layout_constraintVertical_bias="0.7" />
+
+    <!-- Guidelines for proper spacing and alignment -->
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="@dimen/spacing_standard" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical_end"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="@dimen/spacing_standard" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
