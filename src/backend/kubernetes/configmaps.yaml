@@ -1,0 +1,120 @@
+# ConfigMaps for Wildlife Detection Safari Pokédex Application
+# Version: v1
+# This file contains configuration settings for various microservices
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: detection-service-config
+  namespace: wildlife-safari
+  labels:
+    app: wildlife-safari
+    component: detection-service
+data:
+  # ML Model Configuration
+  ML_MODEL_LAYER_SIZE: "1024"
+  ML_TIME_CONSTANTS_MIN: "10"
+  ML_TIME_CONSTANTS_MAX: "100"
+  ML_BATCH_SIZE: "32"
+  ML_LEARNING_RATE: "0.001"
+  ML_INPUT_SIZE: "640"
+  ML_QUANTIZATION_LEVEL: "INT8"
+  ML_MODEL_CACHE_SIZE: "1024"
+  ML_MAX_INFERENCE_TIME: "80"
+
+  # API Configuration
+  API_VERSION: "v1"
+  API_TIMEOUT: "5000"
+  API_MAX_RETRIES: "3"
+  API_CIRCUIT_BREAKER_THRESHOLD: "0.5"
+  API_BACKOFF_MULTIPLIER: "1.5"
+
+  # Observability Configuration
+  LOG_LEVEL: "INFO"
+  METRICS_ENABLED: "true"
+  HEALTH_CHECK_INTERVAL: "30"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: collection-service-config
+  namespace: wildlife-safari
+  labels:
+    app: wildlife-safari
+    component: collection-service
+data:
+  # Database Connection Pool Configuration
+  DB_POOL_MIN: "4"
+  DB_POOL_MAX: "20"
+  DB_POOL_IDLE: "10"
+  DB_IDLE_TIMEOUT: "30000"
+  DB_CONNECTION_TIMEOUT: "2000"
+  DB_MAX_LIFETIME: "120000"
+  DB_VALIDATION_TIMEOUT: "5000"
+  DB_LEAK_DETECTION_THRESHOLD: "60000"
+  DB_STATEMENT_CACHE_SIZE: "250"
+
+  # API Configuration
+  API_VERSION: "v1"
+  API_RATE_LIMIT: "1000"
+  API_BURST_LIMIT: "50"
+
+  # Security Configuration
+  ENABLE_SSL: "true"
+  SSL_PROTOCOL: "TLSv1.3"
+
+  # Cache Configuration
+  CACHE_TTL: "3600"
+  CACHE_MAX_SIZE: "1000"
+
+  # Observability Configuration
+  LOG_LEVEL: "INFO"
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: auth-service-config
+  namespace: wildlife-safari
+  labels:
+    app: wildlife-safari
+    component: auth-service
+data:
+  # Server Configuration
+  SPRING_PROFILES_ACTIVE: "prod"
+  SERVER_PORT: "8081"
+  SERVER_TOMCAT_MAX_THREADS: "200"
+  SERVER_TOMCAT_MIN_SPARE_THREADS: "20"
+
+  # Database Configuration
+  DB_POOL_MIN: "5"
+  DB_POOL_MAX: "20"
+  DB_IDLE_TIMEOUT: "300000"
+  DB_CONNECTION_TIMEOUT: "20000"
+
+  # JWT Configuration
+  JWT_TOKEN_VALIDITY: "604800"
+  JWT_REFRESH_TOKEN_VALIDITY: "2592000"
+  JWT_ISSUER: "wildlife-safari-pokedex"
+  JWT_ALGORITHM: "RS256"
+
+  # CORS Configuration
+  CORS_MAX_AGE: "3600"
+  CORS_ALLOWED_ORIGINS: "*"
+  CORS_ALLOWED_METHODS: "GET,POST,PUT,DELETE,OPTIONS"
+
+  # Security Configuration
+  RATE_LIMIT_ATTEMPTS: "5"
+  RATE_LIMIT_REFRESH_INTERVAL: "300"
+  SESSION_TIMEOUT: "1800"
+  PASSWORD_HASH_ITERATIONS: "10000"
+  PASSWORD_HASH_LENGTH: "256"
+  MFA_ENABLED: "true"
+  MFA_ISSUER: "wildlife-safari-pokedex"
+
+  # Observability Configuration
+  LOG_LEVEL: "INFO"
+  ENABLE_METRICS: "true"
+  ENABLE_HEALTH_PROBES: "true"
