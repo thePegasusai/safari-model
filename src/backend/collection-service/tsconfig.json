@@ -1,0 +1,76 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "CommonJS",
+    "lib": ["ES2022"],
+    "outDir": "./dist",
+    "rootDir": "./src",
+    
+    // Type Checking
+    "strict": true,
+    "noImplicitAny": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    
+    // Module Resolution
+    "moduleResolution": "node",
+    "baseUrl": "./src",
+    "paths": {
+      "@models/*": ["models/*"],
+      "@config/*": ["config/*"],
+      "@services/*": ["services/*"],
+      "@utils/*": ["utils/*"],
+      "@routes/*": ["routes/*"],
+      "@middleware/*": ["middleware/*"],
+      "@interfaces/*": ["interfaces/*"],
+      "@controllers/*": ["controllers/*"],
+      "@repositories/*": ["repositories/*"],
+      "@validators/*": ["validators/*"]
+    },
+    
+    // Decorators
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    
+    // Emit
+    "declaration": true,
+    "sourceMap": true,
+    "incremental": true,
+    
+    // Interop Constraints
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true,
+    
+    // JavaScript Support
+    "allowJs": false,
+    
+    // Additional Features
+    "resolveJsonModule": true
+  },
+  
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.json"
+  ],
+  
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage",
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    "**/*.mock.ts",
+    "**/*.stories.ts"
+  ],
+  
+  "ts-node": {
+    "transpileOnly": true,
+    "files": true,
+    "compilerOptions": {
+      "module": "CommonJS"
+    }
+  }
+}
