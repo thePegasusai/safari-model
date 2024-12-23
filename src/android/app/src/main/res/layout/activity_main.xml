@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Wildlife Detection Safari Pokédex Main Activity Layout
+    Version: 1.0
+    
+    Features:
+    - Material Design 3 compliant layout with bottom navigation
+    - WCAG 2.1 AA accessibility support with minimum 48dp touch targets
+    - Dynamic theme support with day/night mode compatibility
+    - RTL layout support through locale-based direction
+    - Hardware acceleration enabled for optimal performance
+    - Fragment-based navigation with lifecycle awareness
+-->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/colorSurface"
+    android:fitsSystemWindows="true"
+    android:layoutDirection="locale"
+    android:importantForAccessibility="yes"
+    tools:context=".MainActivity">
+
+    <!-- 
+        Fragment Container for Navigation
+        - Uses NavHostFragment for navigation component integration
+        - Supports deep linking and fragment lifecycle management
+        - Fills available space between top of screen and bottom navigation
+        - Hardware accelerated for smooth transitions
+    -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nav_host_fragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:importantForAccessibility="yes"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="FragmentTagUsage" />
+
+    <!-- 
+        Bottom Navigation
+        - Material Design 3 bottom navigation with elevation
+        - Minimum 48dp touch targets for accessibility
+        - Dynamic theme support with surface color background
+        - Active indicator and ripple effects for visual feedback
+        - Hardware accelerated animations
+    -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/bottom_nav_height"
+        android:background="?attr/colorSurface"
+        android:elevation="@dimen/elevation_large"
+        android:importantForAccessibility="yes"
+        android:contentDescription="@string/bottom_navigation_description"
+        app:menu="@menu/bottom_nav_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:itemIconSize="@dimen/icon_size_small"
+        app:itemIconTint="@color/primary"
+        app:itemTextColor="@color/primary"
+        app:itemRippleColor="?attr/colorPrimary"
+        app:labelVisibilityMode="labeled"
+        app:itemActiveIndicatorStyle="@style/Widget.App.BottomNavigation.ActiveIndicator"
+        app:itemMinHeight="@dimen/touch_target_min" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
