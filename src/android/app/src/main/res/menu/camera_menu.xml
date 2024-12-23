@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Camera Interface Menu Resource
+    Wildlife Detection Safari Pokédex
+    
+    Defines the camera interface menu options with focus on flash control functionality.
+    Implements accessibility features and consistent Material Design styling.
+    
+    Features:
+    - Flash mode controls (Auto/On/Off) with proper state management
+    - RTL layout support with auto-mirroring
+    - WCAG 2.1 AA compliant accessibility descriptions
+    - Persistent state handling across configuration changes
+    - Material Design 3.0 compliant iconography (24dp)
+    
+    Reference: Technical Specifications/6.2 Main Camera Interface
+    Version: 1.0
+-->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <!-- Flash Mode Control Menu Item -->
+    <item
+        android:id="@+id/menu_flash_mode"
+        android:title="@string/flash_mode"
+        android:icon="@drawable/ic_flash_auto"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom"
+        android:contentDescription="@string/flash_mode_content_description"
+        android:tooltipText="@string/flash_mode_tooltip">
+
+        <!-- Flash Mode Submenu -->
+        <menu>
+            <!-- Auto Flash Mode -->
+            <item
+                android:id="@+id/flash_auto"
+                android:title="@string/flash_auto"
+                android:icon="@drawable/ic_flash_auto"
+                android:orderInCategory="100"
+                android:checkable="true"
+                android:checked="true"
+                android:contentDescription="@string/flash_auto_content_description"
+                android:tooltipText="@string/flash_auto_tooltip" />
+
+            <!-- Flash On Mode -->
+            <item
+                android:id="@+id/flash_on"
+                android:title="@string/flash_on"
+                android:icon="@drawable/ic_flash_on"
+                android:orderInCategory="200"
+                android:checkable="true"
+                android:contentDescription="@string/flash_on_content_description"
+                android:tooltipText="@string/flash_on_tooltip" />
+
+            <!-- Flash Off Mode -->
+            <item
+                android:id="@+id/flash_off"
+                android:title="@string/flash_off"
+                android:icon="@drawable/ic_flash_off"
+                android:orderInCategory="300"
+                android:checkable="true"
+                android:contentDescription="@string/flash_off_content_description"
+                android:tooltipText="@string/flash_off_tooltip" />
+        </menu>
+    </item>
+
+</menu>
