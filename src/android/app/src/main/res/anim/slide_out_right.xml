@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Slide out right animation with fade effect for the Wildlife Safari app
+    Used for: Fragment/Activity transitions during backward navigation
+    Duration: 250ms (within design spec of 200-300ms)
+    Interpolator: accelerate_decelerate for natural motion
+    RTL support: Yes
+    Min SDK: 21
+-->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="250"
+    android:interpolator="@android:interpolator/accelerate_decelerate"
+    android:shareInterpolator="true">
+
+    <!-- Translate view from current position to right edge -->
+    <translate
+        android:fromXDelta="0"
+        android:toXDelta="100%p"
+        android:duration="250"
+        android:interpolator="@android:interpolator/accelerate_decelerate" />
+
+    <!-- Fade out effect from fully visible to invisible -->
+    <alpha
+        android:fromAlpha="1.0"
+        android:toAlpha="0.0"
+        android:duration="250"
+        android:interpolator="@android:interpolator/accelerate_decelerate" />
+
+</set>
