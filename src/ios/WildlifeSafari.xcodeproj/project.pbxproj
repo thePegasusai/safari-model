@@ -1,0 +1,219 @@
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		1A2B3C4D5E6F7G8H9I0J /* WildlifeSafariApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B3C4D5E6F7G8H9I0J1A /* WildlifeSafariApp.swift */; };
+		2B3C4D5E6F7G8H9I0J1A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3C4D5E6F7G8H9I0J1A2B /* Assets.xcassets */; };
+		3C4D5E6F7G8H9I0J1A2B /* SwiftUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4D5E6F7G8H9I0J1A2B3C /* SwiftUI.framework */; };
+		4D5E6F7G8H9I0J1A2B3C /* CoreML.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E6F7G8H9I0J1A2B3C4D /* CoreML.framework */; };
+		5E6F7G8H9I0J1A2B3C4D /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F7G8H9I0J1A2B3C4D5E /* Metal.framework */; };
+		6F7G8H9I0J1A2B3C4D5E /* ARKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7G8H9I0J1A2B3C4D5E6F /* ARKit.framework */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1A2B3C4D5E6F7G8H9I0J /* WildlifeSafari.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WildlifeSafari.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B3C4D5E6F7G8H9I0J1A /* WildlifeSafariApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WildlifeSafariApp.swift; sourceTree = "<group>"; };
+		3C4D5E6F7G8H9I0J1A2B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		4D5E6F7G8H9I0J1A2B3C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8H9I0J1A2B3C4D5E6F7G /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3C4D5E6F7G8H9I0J1A2B /* SwiftUI.framework in Frameworks */,
+				4D5E6F7G8H9I0J1A2B3C /* CoreML.framework in Frameworks */,
+				5E6F7G8H9I0J1A2B3C4D /* Metal.framework in Frameworks */,
+				6F7G8H9I0J1A2B3C4D5E /* ARKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		9I0J1A2B3C4D5E6F7G8H /* WildlifeSafari */ = {
+			isa = PBXGroup;
+			children = (
+				2B3C4D5E6F7G8H9I0J1A /* WildlifeSafariApp.swift */,
+				3C4D5E6F7G8H9I0J1A2B /* Assets.xcassets */,
+				4D5E6F7G8H9I0J1A2B3C /* Info.plist */,
+			);
+			path = WildlifeSafari;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		0J1A2B3C4D5E6F7G8H9I /* WildlifeSafari */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1A2B3C4D5E6F7G8H9I0J /* Build configuration list for PBXNativeTarget "WildlifeSafari" */;
+			buildPhases = (
+				2B3C4D5E6F7G8H9I0J1A /* Sources */,
+				8H9I0J1A2B3C4D5E6F7G /* Frameworks */,
+				3C4D5E6F7G8H9I0J1A2B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = WildlifeSafari;
+			packageProductDependencies = (
+				4D5E6F7G8H9I0J1A2B3C /* TensorFlowLiteSwift */,
+				5E6F7G8H9I0J1A2B3C4D /* OpenCV */,
+			);
+			productName = WildlifeSafari;
+			productReference = 1A2B3C4D5E6F7G8H9I0J /* WildlifeSafari.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		2B3C4D5E6F7G8H9I0J1A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				ORGANIZATIONNAME = "Wildlife Safari";
+				TargetAttributes = {
+					0J1A2B3C4D5E6F7G8H9I = {
+						CreatedOnToolsVersion = 15.0;
+						DevelopmentTeam = WILDLIFE_SAFARI_TEAM_ID;
+					};
+				};
+			};
+			buildConfigurationList = 3C4D5E6F7G8H9I0J1A2B /* Build configuration list for PBXProject "WildlifeSafari" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 9I0J1A2B3C4D5E6F7G8H;
+			packageReferences = (
+				6F7G8H9I0J1A2B3C4D5E /* XCRemoteSwiftPackageReference "tensorflow-lite-swift" */,
+				7G8H9I0J1A2B3C4D5E6F /* XCRemoteSwiftPackageReference "opencv-swift" */,
+			);
+			productRefGroup = 8H9I0J1A2B3C4D5E6F7G /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				0J1A2B3C4D5E6F7G8H9I /* WildlifeSafari */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin XCBuildConfiguration section */
+		4D5E6F7G8H9I0J1A2B3C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = WILDLIFE_SAFARI_TEAM_ID;
+				ENABLE_BITCODE = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_ML_DEBUG_INFO = YES;
+				ENABLE_ML_OPTIMIZATION = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = "DEBUG=1";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LLVM_LTO = YES;
+				METAL_COMPILER_FLAGS = "-gline-tables-only";
+				METAL_ENABLE_DEBUG_INFO = YES;
+				METAL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wildlifesafari.app;
+				PRODUCT_NAME = "Wildlife Safari";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		5E6F7G8H9I0J1A2B3C4D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				DEAD_CODE_STRIPPING = YES;
+				DEVELOPMENT_TEAM = WILDLIFE_SAFARI_TEAM_ID;
+				ENABLE_BITCODE = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				ENABLE_ML_DEBUG_INFO = NO;
+				ENABLE_ML_OPTIMIZATION = YES;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_OPTIMIZATION_LEVEL = s;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LLVM_LTO = YES;
+				METAL_COMPILER_FLAGS = "-O3";
+				METAL_ENABLE_DEBUG_INFO = NO;
+				METAL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.wildlifesafari.app;
+				PRODUCT_NAME = "Wildlife Safari";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.9;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1A2B3C4D5E6F7G8H9I0J /* Build configuration list for PBXNativeTarget "WildlifeSafari" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D5E6F7G8H9I0J1A2B3C /* Debug */,
+				5E6F7G8H9I0J1A2B3C4D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		3C4D5E6F7G8H9I0J1A2B /* Build configuration list for PBXProject "WildlifeSafari" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4D5E6F7G8H9I0J1A2B3C /* Debug */,
+				5E6F7G8H9I0J1A2B3C4D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		6F7G8H9I0J1A2B3C4D5E /* XCRemoteSwiftPackageReference "tensorflow-lite-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/tensorflow/tensorflow.git";
+			requirement = {
+				kind = exactVersion;
+				version = 2.14.0;
+			};
+		};
+		7G8H9I0J1A2B3C4D5E6F /* XCRemoteSwiftPackageReference "opencv-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/opencv/opencv.git";
+			requirement = {
+				kind = exactVersion;
+				version = 4.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+	};
+	rootObject = 2B3C4D5E6F7G8H9I0J1A /* Project object */;
+}
