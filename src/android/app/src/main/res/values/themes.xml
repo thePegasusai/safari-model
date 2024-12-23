@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+    Wildlife Detection Safari Pokédex Theme Resources
+    MaterialComponents version: 1.9.0
+    
+    Implements Material Design 3 theming system with:
+    - Nature-inspired color palette
+    - Dynamic day/night mode support
+    - WCAG 2.1 AA compliant accessibility features
+    - Consistent elevation and shape system
+-->
+<resources>
+    <!-- Base application theme -->
+    <style name="Theme.WildlifeSafari" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Color system -->
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryVariant">@color/primary_variant</item>
+        <item name="colorSecondary">@color/secondary</item>
+        <item name="colorSecondaryVariant">@color/secondary_variant</item>
+        <item name="android:windowBackground">@color/background</item>
+        <item name="colorSurface">@color/surface</item>
+        <item name="colorError">@color/error</item>
+
+        <!-- On colors for contrast -->
+        <item name="colorOnPrimary">@color/on_primary</item>
+        <item name="colorOnSecondary">@color/on_secondary</item>
+        <item name="colorOnSurface">@color/on_surface</item>
+        <item name="colorOnBackground">@color/on_background</item>
+        <item name="colorOnError">@color/on_error</item>
+
+        <!-- Shape appearance -->
+        <item name="shapeAppearanceSmallComponent">@style/ShapeAppearance.WildlifeSafari.SmallComponent</item>
+        <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.WildlifeSafari.MediumComponent</item>
+        <item name="shapeAppearanceLargeComponent">@style/ShapeAppearance.WildlifeSafari.LargeComponent</item>
+
+        <!-- Elevation -->
+        <item name="elevationSmall">@dimen/elevation_small</item>
+        <item name="elevationMedium">@dimen/elevation_medium</item>
+        <item name="elevationLarge">@dimen/elevation_large</item>
+
+        <!-- System bars -->
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="android:navigationBarColor">@color/surface</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
+        <item name="android:enforceNavigationBarContrast">true</item>
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowTranslucentNavigation">false</item>
+
+        <!-- Material motion -->
+        <item name="motionDurationShort1">100</item>
+        <item name="motionDurationMedium1">200</item>
+        <item name="motionDurationLong1">300</item>
+    </style>
+
+    <!-- Shape Appearances -->
+    <style name="ShapeAppearance.WildlifeSafari.SmallComponent" parent="ShapeAppearance.MaterialComponents.SmallComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/corner_radius_small</item>
+    </style>
+
+    <style name="ShapeAppearance.WildlifeSafari.MediumComponent" parent="ShapeAppearance.MaterialComponents.MediumComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/corner_radius_medium</item>
+    </style>
+
+    <style name="ShapeAppearance.WildlifeSafari.LargeComponent" parent="ShapeAppearance.MaterialComponents.LargeComponent">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/corner_radius_large</item>
+    </style>
+
+    <!-- Widget Styles -->
+    <style name="Widget.WildlifeSafari.Button" parent="Widget.MaterialComponents.Button">
+        <item name="android:minHeight">@dimen/touch_target_min</item>
+        <item name="android:textAppearance">?attr/textAppearanceButton</item>
+        <item name="shapeAppearance">?attr/shapeAppearanceSmallComponent</item>
+        <item name="elevation">@dimen/elevation_small</item>
+    </style>
+
+    <style name="Widget.WildlifeSafari.Card" parent="Widget.MaterialComponents.CardView">
+        <item name="cardElevation">@dimen/elevation_medium</item>
+        <item name="cardCornerRadius">@dimen/corner_radius_medium</item>
+        <item name="cardBackgroundColor">?attr/colorSurface</item>
+        <item name="rippleColor">@color/ripple</item>
+    </style>
+
+    <style name="Widget.WildlifeSafari.BottomNavigation" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="elevation">@dimen/elevation_large</item>
+        <item name="itemIconTint">@color/primary</item>
+        <item name="itemTextColor">@color/primary</item>
+        <item name="backgroundTint">?attr/colorSurface</item>
+    </style>
+
+    <!-- Camera UI Styles -->
+    <style name="Widget.WildlifeSafari.CameraOverlay" parent="">
+        <item name="android:background">@color/camera_overlay</item>
+    </style>
+
+    <style name="Widget.WildlifeSafari.DetectionHighlight" parent="">
+        <item name="android:background">@color/detection_highlight</item>
+    </style>
+
+    <!-- Collection Grid Styles -->
+    <style name="Widget.WildlifeSafari.CollectionGrid" parent="">
+        <item name="android:background">@color/collection_grid_background</item>
+        <item name="android:padding">@dimen/spacing_small</item>
+    </style>
+</resources>
