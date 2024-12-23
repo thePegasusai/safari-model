@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: collection-service
+  namespace: wildlife-safari
+  labels:
+    app: collection-service
+    component: backend
+    tier: microservice
+spec:
+  # High availability with 3 replicas
+  replicas: 3
+  # Zero-downtime deployment strategy
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: collection-service
+  template:
+    metadata:
+      labels:
+        app: collection-service
+        component: backend
+        tier: microservice
+      annotations:
+        # Prometheus monitoring configuration
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8001"
+        prometheus.io/path: "/metrics"
+    spec:
+      # Security context for pod-level security
+      securityContext:
+        fsGroup: 1000
+        runAsNonRoot: true
+      containers:
+        - name: collection-service
+          image: wildlife-safari/collection-service:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 8001
+              protocol: TCP
+          # Resource limits as per specifications
+          resources:
+            limits:
+              cpu: "2"
+              memory: "4Gi"
+            requests:
+              cpu: "500m"
+              memory: "1Gi"
+          # Health checks for high availability
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8001
+            initialDelaySeconds: 15
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 3
+          # Container security context
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1000
+            runAsGroup: 1000
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+            readOnlyRootFilesystem: true
+          # Mount points for temporary files
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+          # Load configuration from ConfigMap
+          envFrom:
+            - configMapRef:
+                name: collection-service-config
+      # Volumes definition
+      volumes:
+        - name: tmp
+          emptyDir: {}
+      # Pod distribution strategy
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - collection-service
+                topologyKey: kubernetes.io/hostname
+      # Grace period for proper shutdown
+      terminationGracePeriodSeconds: 60
