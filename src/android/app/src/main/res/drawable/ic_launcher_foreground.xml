@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+
+    <!-- Main icon group with proper scaling and translation for adaptive icon safe zone -->
+    <group
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        android:translateX="22"
+        android:translateY="22">
+
+        <!-- Outer camera lens ring -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M54,27C39.088,27 27,39.088 27,54c0,14.912 12.088,27 27,27s27-12.088 27-27C81,39.088 68.912,27 54,27zM54,74.5c-11.304,0 -20.5,-9.196 -20.5,-20.5S42.696,33.5 54,33.5S74.5,42.696 74.5,54S65.304,74.5 54,74.5z"/>
+
+        <!-- Inner lens elements representing aperture blades -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M54,44c-5.523,0 -10,4.477 -10,10s4.477,10 10,10s10-4.477 10-10S59.523,44 54,44zM54,58c-2.209,0 -4,-1.791 -4,-4s1.791,-4 4,-4s4,1.791 4,4S56.209,58 54,58z"/>
+
+        <!-- Wildlife spotting elements -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M54,37c-1.104,0 -2,0.896 -2,2s0.896,2 2,2s2,-0.896 2,-2S55.104,37 54,37z"/>
+        
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M54,67c-1.104,0 -2,0.896 -2,2s0.896,2 2,2s2,-0.896 2,-2S55.104,67 54,67z"/>
+        
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M69,52c-1.104,0 -2,0.896 -2,2s0.896,2 2,2s2,-0.896 2,-2S70.104,52 54,52z"/>
+        
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M39,52c-1.104,0 -2,0.896 -2,2s0.896,2 2,2s2,-0.896 2,-2S40.104,52 39,52z"/>
+
+        <!-- Focus points -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M54,51c-1.657,0 -3,1.343 -3,3s1.343,3 3,3s3,-1.343 3,-3S55.657,51 54,51z"/>
+    </group>
+</vector>
