@@ -1,0 +1,167 @@
+name: iOS CI
+
+# Trigger on push/PR to main branches and iOS source changes
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/ios/**'
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - 'src/ios/**'
+
+# Concurrency control to prevent redundant builds
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Environment configuration
+env:
+  XCODE_VERSION: '15.0'
+  WORKSPACE: 'WildlifeSafari.xcworkspace'
+  SCHEME: 'WildlifeSafari'
+  DEVELOPER_APP_ID: ${{ secrets.APPLE_DEVELOPER_APP_ID }}
+  DEVELOPER_APP_IDENTIFIER: ${{ secrets.APPLE_DEVELOPER_APP_IDENTIFIER }}
+  PROVISIONING_PROFILE_SPECIFIER: ${{ secrets.PROVISIONING_PROFILE_SPECIFIER }}
+  APPLE_DEVELOPER_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+  MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+  FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+
+jobs:
+  build-and-test:
+    name: Build and Test
+    runs-on: macos-13
+    timeout-minutes: 60
+    
+    steps:
+    # Checkout repository with security checks
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        lfs: true
+        
+    # Setup Ruby environment for CocoaPods and fastlane
+    - name: Setup Ruby
+      uses: actions/setup-ruby@v1
+      with:
+        ruby-version: '3.0'
+        bundler-cache: true
+        
+    # Cache dependencies
+    - name: Cache Dependencies
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/Library/Caches/CocoaPods
+          Pods
+          vendor/bundle
+        key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pods-
+          
+    # Install dependencies
+    - name: Install Dependencies
+      run: |
+        gem install bundler
+        bundle config path vendor/bundle
+        bundle install --jobs 4 --retry 3
+        bundle exec pod install --repo-update
+        
+    # Security scan
+    - name: Run Security Scan
+      uses: anchore/scan-action@v3
+      with:
+        path: "src/ios"
+        fail-build: true
+        severity-cutoff: high
+        
+    # Setup Xcode environment
+    - name: Setup Xcode
+      run: |
+        sudo xcode-select -switch /Applications/Xcode_${{ env.XCODE_VERSION }}.app
+        xcrun simctl list
+        
+    # Setup code signing
+    - name: Setup Code Signing
+      run: |
+        bundle exec fastlane setup
+      env:
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        MATCH_KEYCHAIN_PASSWORD: ${{ secrets.MATCH_KEYCHAIN_PASSWORD }}
+        
+    # Run tests
+    - name: Run Tests
+      run: |
+        bundle exec fastlane test
+      env:
+        DEVELOPER_APP_ID: ${{ env.DEVELOPER_APP_ID }}
+        DEVELOPER_APP_IDENTIFIER: ${{ env.DEVELOPER_APP_IDENTIFIER }}
+        FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ env.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
+        
+    # Upload test results
+    - name: Upload Test Results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-results
+        path: |
+          build/test_output
+          build/coverage
+          
+    # Build application
+    - name: Build App
+      run: |
+        bundle exec fastlane build configuration:Release
+      env:
+        DEVELOPER_APP_ID: ${{ env.DEVELOPER_APP_ID }}
+        DEVELOPER_APP_IDENTIFIER: ${{ env.DEVELOPER_APP_IDENTIFIER }}
+        PROVISIONING_PROFILE_SPECIFIER: ${{ env.PROVISIONING_PROFILE_SPECIFIER }}
+        APPLE_DEVELOPER_TEAM_ID: ${{ env.APPLE_DEVELOPER_TEAM_ID }}
+        
+    # Upload build artifacts
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: app-build
+        path: build/WildlifeSafari-release.ipa
+        if-no-files-found: error
+        
+    # Verify build artifacts
+    - name: Verify Build Artifacts
+      run: |
+        xcrun codesign -vv build/WildlifeSafari-release.ipa
+        xcrun codesign --verify --verbose build/WildlifeSafari-release.ipa
+        
+    # Deploy to TestFlight if on develop branch
+    - name: Deploy to TestFlight
+      if: github.ref == 'refs/heads/develop'
+      run: |
+        bundle exec fastlane deploy_testflight skip_waiting_for_build_processing:true
+      env:
+        PILOT_USERNAME: ${{ secrets.APPLE_DEVELOPER_EMAIL }}
+        PILOT_APPLE_ID: ${{ env.DEVELOPER_APP_ID }}
+        
+    # Notify on completion
+    - name: Send Notification
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ job.status }}
+        fields: repo,message,commit,author,action,eventName,ref,workflow,job,took
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+# Environment protection rules
+environment:
+  name: ios-ci
+  url: ${{ steps.deploy.outputs.deployment-url }}
+  protection_rules:
+    - required_reviewers: 2
+    - wait_timer: 15
+    - deployment_branch_policy:
+        protected_branches: true
+    - required_checks:
+        - security-scan
+        - code-signing-verification
