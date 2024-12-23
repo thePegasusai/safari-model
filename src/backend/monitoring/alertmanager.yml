@@ -1,0 +1,111 @@
+# AlertManager Configuration v0.25.0
+# Enhanced alert management system for Wildlife Detection Safari Pokédex
+
+global:
+  # Global timeout for resolving alerts
+  resolve_timeout: 5m
+  
+  # SMTP configuration for email notifications
+  smtp_smarthost: 'smtp.wildlife-safari.com:587'
+  smtp_from: 'alerts@wildlife-safari.com'
+  smtp_require_tls: true
+
+# High availability cluster configuration
+cluster:
+  peers:
+    - 'alertmanager-1:9094'
+    - 'alertmanager-2:9094'
+
+# Root route configuration with intelligent grouping
+route:
+  receiver: 'default-receiver'
+  group_by: ['alertname', 'cluster', 'service', 'severity']
+  group_wait: 30s
+  group_interval: 5m
+  repeat_interval: 4h
+
+  # Specialized routing configurations
+  routes:
+    # Critical alerts route with immediate notification
+    - receiver: 'pagerduty-critical'
+      matchers:
+        - 'severity = critical'
+      group_wait: 0s
+      group_interval: 1m
+      repeat_interval: 30m
+
+    # ML performance monitoring route
+    - receiver: 'ml-team'
+      matchers:
+        - 'team = ml'
+      group_wait: 1m
+      group_interval: 5m
+      repeat_interval: 2h
+
+# Receiver configurations for different notification channels
+receivers:
+  # Default email receiver
+  - name: 'default-receiver'
+    email_configs:
+      - to: 'team@wildlife-safari.com'
+        send_resolved: true
+        html: '{{ template "email.default.html" . }}'
+        headers:
+          Subject: '{{ template "email.subject" . }}'
+
+  # PagerDuty integration for critical alerts
+  - name: 'pagerduty-critical'
+    pagerduty_configs:
+      - service_key: 'PAGERDUTY_SERVICE_KEY'
+        description: '{{ .CommonAnnotations.description }}'
+        severity: '{{ .CommonLabels.severity }}'
+        client: 'Wildlife Safari Alertmanager'
+        client_url: '{{ .ExternalURL }}'
+        details:
+          alert_name: '{{ .GroupLabels.alertname }}'
+          service: '{{ .GroupLabels.service }}'
+          cluster: '{{ .GroupLabels.cluster }}'
+          impact: '{{ .CommonAnnotations.impact }}'
+
+  # ML team Slack notifications
+  - name: 'ml-team'
+    slack_configs:
+      - channel: '#ml-alerts'
+        api_url: 'SLACK_WEBHOOK_URL'
+        title: '{{ .CommonAnnotations.summary }}'
+        text: '{{ .CommonAnnotations.description }}'
+        fields:
+          - title: 'Accuracy'
+            value: '{{ .CommonLabels.accuracy }}'
+            short: true
+          - title: 'Latency'
+            value: '{{ .CommonLabels.latency }}'
+            short: true
+
+# Inhibition rules for smart alert suppression
+inhibit_rules:
+  # Suppress dependent service alerts
+  - source_matchers:
+      - 'alertname = ServiceDown'
+    target_matchers:
+      - 'alertname =~ .*Error.*'
+    equal:
+      - 'cluster'
+      - 'namespace'
+    scoped: true
+
+  # Suppress warnings during critical alerts
+  - source_matchers:
+      - 'severity = critical'
+    target_matchers:
+      - 'severity = warning'
+    equal:
+      - 'alertname'
+      - 'service'
+    scoped: true
+
+# Template configurations
+templates:
+  - 'templates/email.tmpl'
+  - 'templates/slack.tmpl'
+  - 'templates/pagerduty.tmpl'
