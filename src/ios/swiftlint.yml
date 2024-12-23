@@ -1,0 +1,137 @@
+# SwiftLint configuration for Wildlife Safari iOS Application
+# Version: 1.0.0
+# Purpose: Enforce code style and ML performance standards
+
+# Disabled rules that don't align with project needs
+disabled_rules:
+  - trailing_whitespace
+  - vertical_whitespace_opening_braces
+  - vertical_whitespace_closing_braces
+
+# Opt-in rules for enhanced code quality and ML performance
+opt_in_rules:
+  - array_init
+  - attributes
+  - closure_end_indentation
+  - closure_spacing
+  - collection_alignment
+  - contains_over_filter_count
+  - contains_over_filter_is_empty
+  - empty_collection_literal
+  - empty_count
+  - empty_string
+  - explicit_init
+  - fallthrough
+  - fatal_error_message
+  - first_where
+  - force_unwrapping
+  - implicit_return
+  - joined_default_parameter
+  - last_where
+  - legacy_random
+  - literal_expression_end_indentation
+  - multiline_arguments
+  - multiline_function_chains
+  - multiline_literal_brackets
+  - multiline_parameters
+  - operator_usage_whitespace
+  - overridden_super_call
+  - pattern_matching_keywords
+  - prefer_self_type_over_type_of_self
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - strict_fileprivate
+  - toggle_bool
+  - trailing_closure
+  - unneeded_parentheses_in_closure_argument
+  - unused_import
+  - vertical_parameter_alignment_on_call
+  - yoda_condition
+
+# Line length configuration
+line_length:
+  warning: 120
+  error: 200
+  ignores_comments: true
+  ignores_urls: true
+
+# Function body length limits
+function_body_length:
+  warning: 50
+  error: 100
+
+# Type body length limits
+type_body_length:
+  warning: 250
+  error: 400
+
+# File length limits
+file_length:
+  warning: 400
+  error: 1000
+  ignore_comment_only_lines: true
+
+# Cyclomatic complexity limits
+cyclomatic_complexity:
+  warning: 10
+  error: 20
+  ignores_case_statements: true
+
+# Nesting configuration
+nesting:
+  type_level:
+    warning: 2
+    error: 3
+  statement_level:
+    warning: 5
+    error: 6
+
+# Identifier naming rules
+identifier_name:
+  min_length:
+    warning: 3
+    error: 2
+  max_length:
+    warning: 40
+    error: 60
+  excluded:
+    - id
+    - ml
+    - ar
+    - ui
+    - url
+    - lnn
+
+# Included paths for linting
+included:
+  - src/ios/WildlifeSafari
+
+# Excluded paths from linting
+excluded:
+  - src/ios/WildlifeSafari/Resources
+  - src/ios/WildlifeSafariTests
+  - src/ios/WildlifeSafariUITests
+  - src/ios/Pods
+
+# Reporter type
+reporter: xcode
+
+# Custom rules for ML performance and best practices
+custom_rules:
+  ml_performance_warning:
+    name: ML Performance
+    regex: '(for\s+.*in.*\{|while\s+.*\{)\s*\/\/\s*ML\s+processing'
+    message: Consider using batch processing for ML operations
+    severity: warning
+  
+  lnn_configuration:
+    name: LNN Configuration
+    regex: 'LNNModel\(.*layerSize:\s*(?!1024)\d+'
+    message: LNN layer size should be 1024 as per specification
+    severity: error
+  
+  image_processing:
+    name: Image Processing
+    regex: 'UIImage\(data:\s*.*\)'
+    message: Use ImageProcessor utility for optimized image handling
+    severity: warning
