@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Species Detail Fragment Layout
+    Material Components version: 1.9.0
+    
+    Implements WCAG 2.1 AA accessibility standards:
+    - Minimum touch targets: 48dp x 48dp
+    - Content descriptions for screen readers
+    - Text scaling support up to 200%
+    - Proper heading structure
+    - Sufficient color contrast (4.5:1 ratio)
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/species_detail_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:importantForAccessibility="yes">
+
+    <!-- Back Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_medium"
+        android:minHeight="@dimen/touch_target_min"
+        android:minWidth="@dimen/touch_target_min"
+        app:icon="@drawable/ic_arrow_back"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:contentDescription="@string/back_button_description"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- Share Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/share_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_medium"
+        android:minHeight="@dimen/touch_target_min"
+        android:minWidth="@dimen/touch_target_min"
+        app:icon="@drawable/ic_share"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:contentDescription="@string/share_button_description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <!-- Species Image Card -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/species_image_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_medium"
+        app:cardElevation="@dimen/elevation_medium"
+        app:cardCornerRadius="@dimen/corner_radius_medium"
+        android:contentDescription="@string/species_image_description"
+        app:layout_constraintTop_toBottomOf="@id/back_button">
+
+        <ImageView
+            android:id="@+id/species_image"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/species_image_size"
+            android:scaleType="centerCrop"
+            android:importantForAccessibility="no"/>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Species Information Section -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/species_image_card"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_medium">
+
+            <!-- Common Name -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/species_common_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceHeadline5"
+                android:textColor="?attr/colorOnSurface"
+                android:layout_marginBottom="@dimen/spacing_small"
+                android:accessibilityHeading="true"
+                tools:text="Red-tailed Hawk"/>
+
+            <!-- Scientific Name -->
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/species_scientific_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:textStyle="italic"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                tools:text="Buteo jamaicensis"/>
+
+            <!-- Conservation Status Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                app:cardElevation="@dimen/elevation_small"
+                app:cardCornerRadius="@dimen/corner_radius_medium">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_medium">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/conservation_status"
+                        android:textAppearance="?attr/textAppearanceSubtitle2"
+                        android:layout_marginBottom="@dimen/spacing_small"/>
+
+                    <ProgressBar
+                        android:id="@+id/conservation_status_bar"
+                        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:progressTint="@color/primary"
+                        android:contentDescription="@string/conservation_status_description"/>
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/conservation_status_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?attr/textAppearanceBody2"
+                        tools:text="Least Concern"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Details Section -->
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/details_heading"
+                android:textAppearance="?attr/textAppearanceSubtitle1"
+                android:layout_marginBottom="@dimen/spacing_small"
+                android:accessibilityHeading="true"/>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_large"
+                app:cardElevation="@dimen/elevation_small"
+                app:cardCornerRadius="@dimen/corner_radius_medium">
+
+                <LinearLayout
+                    android:id="@+id/details_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_medium"/>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/add_to_collection_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_to_collection"
+                    android:minHeight="@dimen/touch_target_min"
+                    android:layout_marginEnd="@dimen/spacing_medium"
+                    style="@style/Widget.MaterialComponents.Button"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/learn_more_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/learn_more"
+                    android:minHeight="@dimen/touch_target_min"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
