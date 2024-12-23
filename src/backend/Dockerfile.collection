@@ -1,0 +1,76 @@
+# ---- Build Stage ----
+FROM node:18-alpine AS builder
+
+# Create non-root user for security
+RUN addgroup -g 1000 nodeuser && \
+    adduser -u 1000 -G nodeuser -s /bin/sh -D nodeuser
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# Copy package files with appropriate ownership
+COPY --chown=nodeuser:nodeuser package*.json ./
+
+# Install dependencies using npm ci for consistent installs
+# Clean npm cache and audit dependencies
+RUN npm ci && \
+    npm cache clean --force && \
+    npm audit
+
+# Copy TypeScript source and config
+COPY --chown=nodeuser:nodeuser tsconfig.json ./
+COPY --chown=nodeuser:nodeuser src/ ./src/
+
+# Build TypeScript code
+RUN npm run build && \
+    npm prune --production
+
+# Set correct permissions
+RUN chown -R nodeuser:nodeuser /usr/src/app && \
+    chmod -R 644 /usr/src/app && \
+    find /usr/src/app -type d -exec chmod 755 {} \;
+
+# ---- Production Stage ----
+FROM node:18-alpine
+
+# Create non-root user
+RUN addgroup -g 1000 nodeuser && \
+    adduser -u 1000 -G nodeuser -s /bin/sh -D nodeuser
+
+# Install production dependencies
+RUN apk add --no-cache wget
+
+# Set working directory
+WORKDIR /usr/src/app
+
+# Copy package files
+COPY --chown=nodeuser:nodeuser package*.json ./
+
+# Install production dependencies only
+RUN npm ci --only=production && \
+    npm cache clean --force
+
+# Copy compiled JavaScript from builder
+COPY --chown=nodeuser:nodeuser --from=builder /usr/src/app/dist ./dist
+
+# Set ownership and permissions
+RUN chown -R nodeuser:nodeuser /usr/src/app && \
+    chmod -R 644 /usr/src/app && \
+    find /usr/src/app -type d -exec chmod 755 {} \;
+
+# Configure health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD wget -qO- http://localhost:3000/health || exit 1
+
+# Expose port
+EXPOSE 3000
+
+# Switch to non-root user
+USER nodeuser
+
+# Set production environment
+ENV NODE_ENV=production \
+    PORT=3000
+
+# Define entry point
+CMD ["node", "dist/app.js"]
