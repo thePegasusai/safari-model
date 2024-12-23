@@ -1,0 +1,183 @@
+# Wildlife Safari Pokédex Authentication Service Configuration
+# Version: 1.0.0
+# Spring Boot 2.7.x compatible
+
+spring:
+  application:
+    name: auth-service
+    description: Authentication service for Wildlife Safari Pokédex
+  
+  # Active Profile Configuration
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  
+  # Database Configuration with Hikari Connection Pool
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:wildlife_safari}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 20
+      idle-timeout: 300000
+      connection-timeout: 20000
+      max-lifetime: 1200000
+      pool-name: WildlifeSafariHikariCP
+      leak-detection-threshold: 30000
+  
+  # JPA/Hibernate Configuration
+  jpa:
+    hibernate:
+      ddl-auto: validate
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        jdbc:
+          batch_size: 25
+          fetch_size: 100
+        order_inserts: true
+        order_updates: true
+    show-sql: false
+
+# Server Configuration
+server:
+  port: ${SERVER_PORT:8081}
+  shutdown: graceful
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+  http2:
+    enabled: true
+  tomcat:
+    max-threads: 200
+    min-spare-threads: 10
+    max-connections: 10000
+    accept-count: 100
+
+# JWT Configuration
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  token-validity-in-seconds: 604800  # 7 days
+  issuer: wildlife-safari-pokedex
+  audience: wildlife-safari-api
+  refresh-token-validity-in-seconds: 2592000  # 30 days
+  token-blacklist-enabled: true
+  token-blacklist-cleanup-interval: 3600  # 1 hour
+
+# Security Configuration
+security:
+  oauth2:
+    client:
+      provider:
+        auth0:
+          issuer-uri: ${AUTH0_ISSUER_URI}
+          jwk-set-uri: ${AUTH0_JWK_SET_URI}
+          user-info-uri: ${AUTH0_USER_INFO_URI}
+          authorization-uri: ${AUTH0_AUTHORIZATION_URI}
+          token-uri: ${AUTH0_TOKEN_URI}
+      registration:
+        auth0:
+          client-id: ${AUTH0_CLIENT_ID}
+          client-secret: ${AUTH0_CLIENT_SECRET}
+          scope:
+            - openid
+            - profile
+            - email
+          authorization-grant-type: authorization_code
+          redirect-uri: ${AUTH0_REDIRECT_URI}
+  require-ssl: true
+  cors:
+    allowed-origins:
+      - https://*.wildlifesafari.com
+      - ${ALLOWED_ORIGINS}
+    allowed-methods:
+      - GET
+      - POST
+      - PUT
+      - DELETE
+      - OPTIONS
+    allowed-headers:
+      - Authorization
+      - Content-Type
+      - X-Requested-With
+    exposed-headers:
+      - Authorization
+    allow-credentials: true
+    max-age: 3600
+  headers:
+    frame-options: DENY
+    content-security-policy: "default-src 'self'"
+    referrer-policy: strict-origin-when-cross-origin
+    permitted-cross-domain-policies: none
+    content-type-options: nosniff
+    xss-protection: "1; mode=block"
+
+# Management & Monitoring Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - info
+          - metrics
+          - prometheus
+          - loggers
+        exclude:
+          - env
+          - beans
+      base-path: /actuator
+      cors:
+        allowed-origins:
+          - https://*.wildlifesafari.com
+        allowed-methods:
+          - GET
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+        step: 1m
+    distribution:
+      percentiles-histogram: true
+      sla:
+        http:
+          - 50
+          - 100
+          - 200
+          - 300
+          - 500
+          - 1000
+      minimum-expected-value: 1ms
+      maximum-expected-value: 30s
+    tags:
+      application: wildlife-safari-auth
+  health:
+    probes:
+      enabled: true
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+    show-details: when_authorized
+    show-components: when_authorized
+
+# Logging Configuration
+logging:
+  level:
+    root: INFO
+    com.wildlifesafari.auth: ${LOG_LEVEL:INFO}
+    org.springframework.security: INFO
+    org.springframework.web: INFO
+    org.hibernate: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: ${LOG_FILE_PATH:/var/log/wildlife-safari/auth-service.log}
+    max-size: 10MB
+    max-history: 30
