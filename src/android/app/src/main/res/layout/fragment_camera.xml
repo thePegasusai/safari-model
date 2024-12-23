@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Camera Fragment Layout for Wildlife Detection Safari Pokédex
+    Version: 1.0
+    
+    Features:
+    - Full-screen camera preview with real-time LNN detection
+    - Material Design 3 components with proper elevation and animations
+    - WCAG 2.1 AA compliant with proper touch targets and contrast
+    - Optimized view hierarchy for performance
+    - Comprehensive accessibility support
+    - Hardware accelerated rendering
+-->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/camera_fragment_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:keepScreenOn="true"
+    android:importantForAccessibility="yes"
+    android:layerType="hardware">
+
+    <!-- Camera Preview with LNN Detection
+         - Hardware accelerated for optimal performance
+         - Full screen with proper aspect ratio handling
+         - Supports real-time detection overlay -->
+    <com.wildlifesafari.app.ui.components.CameraPreviewView
+        android:id="@+id/camera_preview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:contentDescription="@string/camera_preview_description"
+        android:importantForAccessibility="yes"
+        app:implementationMode="performance"
+        app:scaleType="fitCenter"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Species Information Card
+         - Material Design 3 elevated card
+         - Animated visibility changes
+         - Proper spacing and elevation
+         - Accessibility support -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/species_info_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"
+        android:contentDescription="@string/species_info_description"
+        android:importantForAccessibility="yes"
+        android:animateLayoutChanges="true"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="16dp"
+        app:cardBackgroundColor="@color/species_card_background"
+        app:layout_constraintBottom_toTopOf="@id/camera_controls"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        style="@style/Widget.Material3.CardView.Elevated">
+
+        <!-- Species Info Content Container -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <!-- Species Name Text -->
+            <TextView
+                android:id="@+id/species_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceHeadline6"
+                android:textColor="@color/on_surface"
+                android:maxLines="2"
+                android:ellipsize="end"
+                tools:text="Red-tailed Hawk" />
+
+            <!-- Detection Confidence -->
+            <TextView
+                android:id="@+id/detection_confidence"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textAppearance="?attr/textAppearanceBody2"
+                android:textColor="@color/on_surface"
+                tools:text="Confidence: 95%" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Camera Controls Include
+         - Includes separate layout for better organization
+         - Contains flash, mode toggle, and capture buttons
+         - Proper touch targets and accessibility -->
+    <include
+        android:id="@+id/camera_controls"
+        layout="@layout/view_camera_controls"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Detection Overlay
+         - Semi-transparent overlay for detection feedback
+         - Hardware accelerated for performance -->
+    <View
+        android:id="@+id/detection_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/camera_overlay"
+        android:visibility="gone"
+        android:layerType="hardware"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
