@@ -1,0 +1,137 @@
+/* 
+  Localizable.strings
+  Wildlife Safari
+  
+  Created: 2024-01-20
+  Version: 1.0.0
+  
+  This file contains all user-facing text for the Wildlife Safari iOS application.
+  Supports multiple languages with accessibility enhancements and cultural adaptations.
+  
+  Guidelines for translators:
+  - Maintain consistent terminology across translations
+  - Preserve placeholder formats (%@, %d)
+  - Consider cultural sensitivities and local wildlife terminology
+  - Ensure accessibility descriptions are clear and descriptive
+  - Support right-to-left languages where applicable
+*/
+
+// MARK: - App General
+"app.name" = "Wildlife Safari";
+"app.name.accessibility" = "Wildlife Safari, Your Digital Nature Guide";
+
+// MARK: - Camera Interface
+/* Camera mode selection buttons */
+"camera.mode.wildlife" = "Wildlife Detection";
+"camera.mode.wildlife.accessibility" = "Wildlife Detection Mode, Double tap to activate";
+"camera.mode.fossil" = "Fossil Scan";
+"camera.mode.fossil.accessibility" = "Fossil Scanning Mode, Double tap to activate";
+
+/* Camera controls */
+"camera.button.capture" = "Capture";
+"camera.button.capture.accessibility" = "Capture Button, Double tap to take photo";
+"camera.button.flash.auto" = "Flash Auto";
+"camera.button.flash.auto.accessibility" = "Flash Mode Auto, Double tap to change";
+"camera.button.flash.on" = "Flash On";
+"camera.button.flash.on.accessibility" = "Flash Mode On, Double tap to change";
+"camera.button.flash.off" = "Flash Off";
+"camera.button.flash.off.accessibility" = "Flash Mode Off, Double tap to change";
+
+/* Camera status messages */
+"camera.status.processing" = "Processing...";
+"camera.status.processing.accessibility" = "Currently processing image, please wait";
+"camera.status.ready" = "Ready to Capture";
+"camera.status.ready.accessibility" = "Camera is ready for capture";
+"camera.status.focusing" = "Focusing...";
+"camera.status.focusing.accessibility" = "Camera is adjusting focus";
+
+// MARK: - Species Information
+/* Species detail labels */
+"species.label.commonName" = "Common Name";
+"species.label.scientificName" = "Scientific Name";
+"species.label.conservationStatus" = "Conservation Status";
+"species.label.conservationStatus.accessibility" = "Conservation Status: %@ on the endangered species scale";
+"species.label.habitat" = "Habitat";
+"species.label.diet" = "Diet";
+"species.label.size" = "Size";
+
+/* Conservation status descriptions */
+"species.conservation.extinct" = "Extinct";
+"species.conservation.criticallyEndangered" = "Critically Endangered";
+"species.conservation.endangered" = "Endangered";
+"species.conservation.vulnerable" = "Vulnerable";
+"species.conservation.nearThreatened" = "Near Threatened";
+"species.conservation.leastConcern" = "Least Concern";
+
+// MARK: - Collection View
+/* Collection navigation and sorting */
+"collection.title" = "My Collection";
+"collection.empty" = "No discoveries yet. Start exploring!";
+"collection.sort.recent" = "Most Recent";
+"collection.sort.recent.accessibility" = "Sort by most recent discoveries";
+"collection.sort.name" = "Name";
+"collection.sort.name.accessibility" = "Sort alphabetically by name";
+"collection.sort.rarity" = "Rarity";
+"collection.sort.rarity.accessibility" = "Sort by species rarity";
+
+/* Collection actions */
+"collection.action.share" = "Share";
+"collection.action.share.accessibility" = "Share this discovery";
+"collection.action.delete" = "Delete";
+"collection.action.delete.accessibility" = "Delete this discovery";
+"collection.action.export" = "Export";
+"collection.action.export.accessibility" = "Export collection data";
+
+// MARK: - Settings
+/* Language settings */
+"settings.language" = "Language";
+"settings.language.accessibility" = "Language Selection, currently set to %@";
+"settings.language.system" = "System Default";
+"settings.language.system.accessibility" = "Use system language settings";
+
+/* Accessibility settings */
+"settings.accessibility.voiceOver" = "VoiceOver Hints";
+"settings.accessibility.largeText" = "Large Text";
+"settings.accessibility.highContrast" = "High Contrast";
+
+// MARK: - Alerts and Messages
+/* Error messages */
+"alert.error.camera.title" = "Camera Access Required";
+"alert.error.camera.message" = "Please enable camera access in Settings to use Wildlife Detection";
+"alert.error.camera.accessibility" = "Camera access required. Double tap to open settings";
+
+/* Success messages */
+"alert.success.discovery.title" = "Discovery Saved!";
+"alert.success.discovery.message" = "Your discovery has been added to your collection";
+"alert.success.discovery.accessibility" = "Discovery successfully saved to your collection";
+
+/* Loading states */
+"loading.analyzing" = "Analyzing Image...";
+"loading.analyzing.accessibility" = "Currently analyzing image for species identification";
+"loading.saving" = "Saving Discovery...";
+"loading.saving.accessibility" = "Currently saving your discovery";
+
+// MARK: - Navigation
+/* Navigation bar titles and buttons */
+"nav.back" = "Back";
+"nav.back.accessibility" = "Go back to previous screen";
+"nav.settings" = "Settings";
+"nav.settings.accessibility" = "Open settings menu";
+"nav.edit" = "Edit";
+"nav.edit.accessibility" = "Edit current item";
+
+// MARK: - Placeholders and Formatting
+/* Placeholder text */
+"placeholder.search" = "Search your collection";
+"placeholder.search.accessibility" = "Double tap to search your collection";
+"placeholder.notes" = "Add notes about your discovery";
+"placeholder.notes.accessibility" = "Double tap to add notes about your discovery";
+
+/* Date formatting */
+"date.format.short" = "MMM d, yyyy";
+"date.format.long" = "MMMM d, yyyy 'at' h:mm a";
+"date.format.accessibility" = "Discovered on %@";
+
+// MARK: - Cultural Adaptations
+/* Regional wildlife terminology variations can be added here */
+"wildlife.term.adaptation.note" = "/* Add cultural-specific terms as needed */";
