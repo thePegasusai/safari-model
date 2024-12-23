@@ -1,0 +1,128 @@
+# Kubernetes Services Configuration for Wildlife Detection Safari Pokédex
+# Version: v1
+# This file defines service endpoints and load balancing for microservices
+
+---
+# Authentication Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: auth-service
+  namespace: wildlife-safari
+  labels:
+    app: auth-service
+    component: backend
+    part-of: wildlife-safari
+  annotations:
+    # Prometheus monitoring configuration
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8081"
+    prometheus.io/path: "/metrics"
+    # Service mesh configuration
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-internal: "true"
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8081
+      targetPort: 8081
+      protocol: TCP
+      name: http
+  selector:
+    app: auth-service
+    component: backend
+    part-of: wildlife-safari
+
+---
+# Detection Service (ML Processing)
+apiVersion: v1
+kind: Service
+metadata:
+  name: detection-service
+  namespace: wildlife-safari
+  labels:
+    app: detection-service
+    component: ml-processing
+    tier: backend
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8000"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8000
+      targetPort: 8000
+      protocol: TCP
+      name: http
+    - port: 9090
+      targetPort: 9090
+      protocol: TCP
+      name: metrics
+  selector:
+    app: detection-service
+    component: ml-processing
+    tier: backend
+  # Session affinity for ML processing consistency
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 10800  # 3 hour timeout
+
+---
+# Collection Management Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: collection-service
+  namespace: wildlife-safari
+  labels:
+    app: collection-service
+    component: backend
+    tier: microservice
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8001"
+    prometheus.io/path: "/metrics"
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8001
+      targetPort: 8001
+      protocol: TCP
+      name: http
+  selector:
+    app: collection-service
+    component: backend
+    tier: microservice
+
+---
+# Sync Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: sync-service
+  namespace: wildlife-safari
+  labels:
+    app: sync-service
+    component: backend
+    tier: microservice
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8002"
+    prometheus.io/path: "/metrics"
+    # High availability annotations
+    service.beta.kubernetes.io/aws-load-balancer-cross-zone-load-balancing-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-enabled: "true"
+    service.beta.kubernetes.io/aws-load-balancer-connection-draining-timeout: "60"
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8002
+      targetPort: 8002
+      protocol: TCP
+      name: http
+  selector:
+    app: sync-service
+    component: backend
+    tier: microservice
