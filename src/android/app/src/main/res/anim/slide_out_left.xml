@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Slide out left animation resource that combines translation and fade effects
+    Used for fragment and activity transitions during forward navigation
+    
+    Duration: 250ms (within design spec of 200-300ms)
+    Interpolator: accelerate_decelerate for natural motion
+    Translation: Moves view from current position to -100% of parent width
+    Alpha: Fades from fully visible (1.0) to invisible (0.0)
+    
+    Performance optimized for 60fps target frame rate
+    Supports system animation scale settings
+    Respects reduced motion preferences
+-->
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:duration="250"
+    android:interpolator="@android:interpolator/accelerate_decelerate"
+    android:shareInterpolator="true">
+
+    <!-- Translate view from current position to left edge -->
+    <translate
+        android:fromXDelta="0"
+        android:toXDelta="-100%p"
+        android:fillAfter="true" />
+
+    <!-- Fade out view from fully visible to invisible -->
+    <alpha
+        android:fromAlpha="1.0"
+        android:toAlpha="0.0"
+        android:fillAfter="true" />
+
+</set>
