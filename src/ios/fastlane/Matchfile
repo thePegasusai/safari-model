@@ -1,0 +1,63 @@
+# fastlane match 2.217.0
+
+# Git URL where certificates and provisioning profiles are stored
+# Stored securely in environment variables to prevent exposure
+git_url(ENV['MATCH_GIT_URL'])
+
+# Use Git as the storage backend for certificates
+storage_mode("git")
+
+# Type of code signing identity to sync
+# Can be appstore, adhoc, development, enterprise
+type("development")
+
+# App identifiers to include in provisioning profiles
+# Main app and debug variant
+app_identifier([
+  "com.wildlifesafari.pokedex",
+  "com.wildlifesafari.pokedex.debug"
+])
+
+# Apple Developer Team ID
+# Imported from Appfile for consistency
+team_id(ENV['APPLE_TEAM_ID'])
+
+# Apple Developer Portal username
+# Stored securely in environment variables
+username(ENV['APPLE_DEVELOPER_EMAIL'])
+
+# Git branch to use for certificate storage
+git_branch("main")
+
+# Enable readonly mode in CI environment to prevent concurrent modifications
+readonly(true) if is_ci
+
+# Path to Apple API key for CI authentication
+api_key_path("fastlane/api_key.json")
+
+# Additional security configurations
+platform :ios do
+  # Keychain configuration for CI environments
+  keychain_name(ENV['MATCH_KEYCHAIN_NAME']) if is_ci
+  keychain_password(ENV['MATCH_KEYCHAIN_PASSWORD'])
+  
+  # Certificate rotation settings
+  force_for_new_devices(true)
+  skip_confirmation(true) if is_ci
+  
+  # Shallow clone for faster CI builds
+  shallow_clone(true) if is_ci
+  
+  # Certificate cleanup
+  cleanup_expired_certs(true)
+  
+  # Template name for provisioning profiles
+  profile_name("Wildlife Safari Pokedex {type}")
+end
+
+# Advanced security settings
+ENV["MATCH_PASSWORD"] # Required: Used for certificate encryption
+ENV["MATCH_GIT_PRIVATE_KEY"] # Optional: For SSH key authentication
+
+# Logging and debugging options
+verbose(true) if ENV['FASTLANE_DEBUG']
