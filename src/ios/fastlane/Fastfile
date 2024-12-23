@@ -1,0 +1,245 @@
+# fastlane 2.217.0
+fastlane_version '2.217.0'
+default_platform :ios
+
+# Import app configuration
+import_from_git(
+  url: 'https://github.com/fastlane/fastlane',
+  path: 'fastlane/Fastfile'
+)
+
+# Global constants
+WORKSPACE = 'WildlifeSafari.xcworkspace'
+SCHEME = 'WildlifeSafari'
+BUILD_PATH = './build'
+CACHE_PATH = './fastlane/cache'
+MAX_CONCURRENT_SIMULATORS = 3
+BUILD_TIMEOUT = 3600
+RETRY_COUNT = 3
+
+# Platform configuration
+platform :ios do
+  before_all do |lane, options|
+    ensure_bundle_exec
+    ensure_xcode_version(version: '15.0')
+    cocoapods(repo_update: true)
+    clear_derived_data
+  end
+
+  desc 'Setup development environment with security validation'
+  lane :setup do
+    # Install dependencies
+    bundle_install(
+      clean: true,
+      deployment: true,
+      retry: RETRY_COUNT
+    )
+
+    # Setup code signing
+    setup_ci if is_ci
+    match(
+      type: 'development',
+      readonly: true,
+      force_for_new_devices: true,
+      app_identifier: [app_identifier]
+    )
+
+    # Initialize monitoring
+    datadog_init(
+      api_key: ENV['DATADOG_API_KEY'],
+      environment: ENV['CI'] ? 'ci' : 'development'
+    )
+  end
+
+  desc 'Run tests with parallel execution and coverage reporting'
+  lane :test do |options|
+    scan(
+      workspace: WORKSPACE,
+      scheme: SCHEME,
+      clean: true,
+      code_coverage: true,
+      concurrent_workers: MAX_CONCURRENT_SIMULATORS,
+      result_bundle: true,
+      output_directory: "#{BUILD_PATH}/test_output",
+      output_types: 'html,junit',
+      fail_build: true,
+      devices: ['iPhone 14 Pro'],
+      retry_count: RETRY_COUNT
+    )
+
+    # Generate and process coverage report
+    slather(
+      workspace: WORKSPACE,
+      scheme: SCHEME,
+      output_directory: "#{BUILD_PATH}/coverage",
+      html: true,
+      show: true,
+      ignore: ['Pods/*', 'Carthage/*']
+    )
+
+    # Upload results to CI platform
+    if is_ci
+      trainer(
+        path: "#{BUILD_PATH}/test_output",
+        output_directory: "#{BUILD_PATH}/test_report"
+      )
+    end
+  end
+
+  desc 'Build application with specified configuration'
+  lane :build do |options|
+    configuration = options[:configuration] || 'Release'
+    
+    # Setup code signing
+    match(
+      type: configuration == 'Release' ? 'appstore' : 'development',
+      readonly: true,
+      app_identifier: [app_identifier]
+    )
+
+    # Build application
+    gym(
+      workspace: WORKSPACE,
+      scheme: SCHEME,
+      configuration: configuration,
+      clean: options[:clean_build] || true,
+      output_directory: BUILD_PATH,
+      output_name: "WildlifeSafari-#{configuration.downcase}",
+      include_bitcode: configuration == 'Release',
+      include_symbols: true,
+      export_method: configuration == 'Release' ? 'app-store' : 'development',
+      export_options: {
+        provisioningProfiles: {
+          app_identifier => "match #{configuration == 'Release' ? 'AppStore' : 'Development'} #{app_identifier}"
+        }
+      },
+      build_path: BUILD_PATH,
+      derived_data_path: "#{BUILD_PATH}/DerivedData",
+      result_bundle: true,
+      silent: is_ci,
+      timeout: BUILD_TIMEOUT
+    )
+
+    # Upload debug symbols
+    upload_symbols_to_crashlytics(
+      dsym_path: "#{BUILD_PATH}/WildlifeSafari-#{configuration.downcase}.app.dSYM.zip",
+      api_token: ENV['CRASHLYTICS_API_TOKEN']
+    )
+  end
+
+  desc 'Deploy to TestFlight with staged rollout'
+  lane :deploy_testflight do |options|
+    # Ensure we're on the release branch
+    ensure_git_branch(branch: 'release/*')
+
+    # Build release version
+    build(configuration: 'Release')
+
+    # Upload to TestFlight
+    pilot(
+      skip_waiting_for_build_processing: options[:skip_waiting_for_build_processing] || false,
+      distribute_external: true,
+      groups: options[:groups] || ['Beta Testers'],
+      changelog: read_changelog,
+      beta_app_review_info: {
+        demo_account_required: false,
+        demo_account_name: ENV['DEMO_ACCOUNT_NAME'],
+        demo_account_password: ENV['DEMO_ACCOUNT_PASSWORD'],
+        notes: 'Please test core wildlife detection and fossil scanning features'
+      },
+      localized_build_info: {
+        'default': {
+          whats_new: read_changelog
+        }
+      },
+      notify_external_testers: true,
+      ipa: "#{BUILD_PATH}/WildlifeSafari-release.ipa"
+    )
+
+    # Notify team
+    slack(
+      message: 'Successfully deployed to TestFlight!',
+      success: true,
+      payload: {
+        'Build Date' => Time.new.to_s,
+        'Built by' => 'Jenkins',
+        'Version' => get_version_number
+      }
+    )
+  end
+
+  desc 'Deploy to App Store with phased release'
+  lane :deploy_appstore do |options|
+    # Ensure we're on the master branch
+    ensure_git_branch(branch: 'master')
+
+    # Build release version
+    build(configuration: 'Release')
+
+    # Upload to App Store
+    deliver(
+      ipa: "#{BUILD_PATH}/WildlifeSafari-release.ipa",
+      skip_metadata: options[:skip_metadata] || false,
+      skip_screenshots: true,
+      force: true,
+      phased_release: options[:phased_release] || true,
+      submission_information: {
+        add_id_info_uses_idfa: false,
+        export_compliance_uses_encryption: true,
+        export_compliance_encryption_updated: false
+      },
+      precheck_include_in_app_purchases: true
+    )
+
+    # Tag release
+    add_git_tag(
+      tag: "v#{get_version_number}-#{get_build_number}"
+    )
+    push_git_tags
+
+    # Notify team
+    slack(
+      message: 'Successfully deployed to App Store!',
+      success: true,
+      payload: {
+        'Version' => get_version_number,
+        'Build' => get_build_number,
+        'Phased Release' => options[:phased_release] ? 'Enabled' : 'Disabled'
+      }
+    )
+  end
+
+  after_all do |lane, options|
+    # Clean up
+    clean_build_artifacts
+    clear_derived_data
+
+    # Update metrics
+    datadog_metric(
+      api_key: ENV['DATADOG_API_KEY'],
+      metric: "fastlane.#{lane}.success",
+      value: 1,
+      tags: ["environment:#{ENV['CI'] ? 'ci' : 'development'}", "lane:#{lane}"]
+    )
+  end
+
+  error do |lane, exception, options|
+    # Report failure
+    datadog_metric(
+      api_key: ENV['DATADOG_API_KEY'],
+      metric: "fastlane.#{lane}.failure",
+      value: 1,
+      tags: ["environment:#{ENV['CI'] ? 'ci' : 'development'}", "lane:#{lane}"]
+    )
+
+    # Notify team
+    slack(
+      message: "Lane #{lane} failed with: #{exception.message}",
+      success: false,
+      payload: {
+        'Exception' => exception.message,
+        'Stack Trace' => exception.backtrace.join("\n")
+      }
+    )
+  end
+end
