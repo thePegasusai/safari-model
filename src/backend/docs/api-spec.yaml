@@ -1,0 +1,454 @@
+openapi: 3.0.3
+info:
+  title: Wildlife Detection Safari Pokédex API
+  description: |
+    Enterprise-grade API for wildlife species detection, fossil recognition, and collection management.
+    Implements comprehensive security features and follows REST best practices.
+  version: 1.0.0
+  contact:
+    name: Wildlife Safari Development Team
+    email: api@wildlifesafari.com
+  license:
+    name: Proprietary
+    url: https://api.wildlifesafari.com/license
+
+servers:
+  - url: https://api.wildlifesafari.com/v1
+    description: Production server
+  - url: https://staging-api.wildlifesafari.com/v1
+    description: Staging server
+
+security:
+  - bearerAuth: []
+  - OAuth2: []
+
+paths:
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Authenticate user credentials
+      description: Authenticates user and returns JWT token with biometric support
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /auth/oauth2/callback:
+    post:
+      tags: [Authentication]
+      summary: OAuth2 callback handler
+      description: Processes OAuth2 authentication callback
+      operationId: oauthCallback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuth2CallbackRequest'
+      responses:
+        '200':
+          description: OAuth2 authentication successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /detect/species:
+    post:
+      tags: [Detection]
+      summary: Detect wildlife species
+      description: Real-time species detection using LNN technology
+      operationId: detectSpecies
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: string
+                  format: binary
+                options:
+                  $ref: '#/components/schemas/DetectionOptions'
+      responses:
+        '200':
+          description: Species detection successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpeciesDetectionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '413':
+          $ref: '#/components/responses/PayloadTooLarge'
+
+  /detect/fossil:
+    post:
+      tags: [Detection]
+      summary: Detect fossil specimens
+      description: 3D fossil detection and analysis
+      operationId: detectFossil
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                scan_data:
+                  type: string
+                  format: binary
+                options:
+                  $ref: '#/components/schemas/DetectionOptions'
+      responses:
+        '200':
+          description: Fossil detection successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FossilDetectionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /collections:
+    get:
+      tags: [Collections]
+      summary: Get user collections
+      description: Retrieves paginated list of user's collections
+      operationId: getUserCollections
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/LimitParam'
+      responses:
+        '200':
+          description: Collections retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [Collections]
+      summary: Create collection
+      description: Creates a new collection
+      operationId: createCollection
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCollectionRequest'
+      responses:
+        '201':
+          description: Collection created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CollectionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        biometricData:
+          type: string
+          format: binary
+
+    OAuth2CallbackRequest:
+      type: object
+      required:
+        - code
+        - provider
+      properties:
+        code:
+          type: string
+        provider:
+          type: string
+          enum: [google, facebook, apple]
+
+    AuthResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        role:
+          type: string
+          enum: [BASIC_USER, RESEARCHER, MODERATOR, ADMINISTRATOR]
+        expiresIn:
+          type: integer
+          format: int64
+
+    DetectionOptions:
+      type: object
+      properties:
+        enhance_detection:
+          type: boolean
+          default: false
+        generate_3d:
+          type: boolean
+          default: false
+        confidence_threshold:
+          type: number
+          minimum: 0
+          maximum: 1
+          default: 0.90
+        correlation_id:
+          type: string
+          format: uuid
+
+    SpeciesDetectionResponse:
+      type: object
+      properties:
+        correlation_id:
+          type: string
+          format: uuid
+        species:
+          type: string
+        confidence:
+          type: number
+          format: float
+        processing_time_ms:
+          type: number
+        enhanced_detection:
+          type: boolean
+        metrics:
+          type: object
+          additionalProperties: true
+
+    FossilDetectionResponse:
+      type: object
+      properties:
+        correlation_id:
+          type: string
+          format: uuid
+        fossil_type:
+          type: string
+        confidence:
+          type: number
+          format: float
+        measurements:
+          type: object
+          properties:
+            length:
+              type: number
+            width:
+              type: number
+            height:
+              type: number
+        processing_time_ms:
+          type: number
+        model_3d:
+          type: string
+          format: uri
+
+    CreateCollectionRequest:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          minLength: 3
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 1000
+        metadata:
+          type: object
+          properties:
+            tags:
+              type: array
+              items:
+                type: string
+              maxItems: 10
+            category:
+              type: string
+              enum: [wildlife, fossil, mixed]
+            visibility:
+              type: string
+              enum: [private, public, shared]
+              default: private
+            shared_with:
+              type: array
+              items:
+                type: string
+                format: uuid
+
+    CollectionResponse:
+      type: object
+      properties:
+        collection_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CollectionListResponse:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/CollectionResponse'
+        meta:
+          type: object
+          properties:
+            total:
+              type: integer
+            page:
+              type: integer
+            limit:
+              type: integer
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    OAuth2:
+      type: oauth2
+      flows:
+        authorizationCode:
+          authorizationUrl: https://api.wildlifesafari.com/v1/auth/oauth
+          tokenUrl: https://api.wildlifesafari.com/v1/auth/token
+          refreshUrl: https://api.wildlifesafari.com/v1/auth/refresh
+          scopes:
+            read:species: Read species data
+            write:collections: Manage collections
+            read:fossils: Read fossil data
+            write:discoveries: Record discoveries
+
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      description: Page number for pagination
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    LimitParam:
+      name: limit
+      in: query
+      description: Number of items per page
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 50
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required or invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    TooManyRequests:
+      description: Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+        X-RateLimit-Reset:
+          schema:
+            type: integer
+            format: unix-timestamp
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    PayloadTooLarge:
+      description: Request payload exceeds size limit
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Error:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: string
+          enum: [error]
+        message:
+          type: string
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+
+tags:
+  - name: Authentication
+    description: Authentication and authorization endpoints
+  - name: Detection
+    description: Species and fossil detection endpoints
+  - name: Collections
+    description: Collection management endpoints
