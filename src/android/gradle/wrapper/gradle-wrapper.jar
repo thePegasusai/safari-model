@@ -1,0 +1,10 @@
+Key characteristics:
+- File type: JAR (Java Archive)
+- Version: Gradle Wrapper 8.0
+- Purpose: Provides consistent Gradle build environment
+- SHA-256: Must match official Gradle distribution checksum
+- Size: ~50KB
+
+This file should be committed to version control and not modified manually.
+To update this file, use:
+./gradlew wrapper --gradle-version 8.0 --distribution-type bin
