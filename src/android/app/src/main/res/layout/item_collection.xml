@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Collection Item Layout
+    Material Components version: 1.9.0
+    
+    Implements:
+    - Material Design card container with proper elevation and corner radius
+    - WCAG 2.1 AA compliant touch targets (48dp minimum)
+    - Proper content descriptions for accessibility
+    - Efficient ConstraintLayout for performance
+    - Support for both grid and list view formats
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_collection"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/spacing_medium"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    android:minHeight="@dimen/touch_target_min"
+    app:cardBackgroundColor="?attr/colorSurface"
+    app:cardCornerRadius="@dimen/corner_radius_medium"
+    app:cardElevation="@dimen/elevation_small">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/spacing_medium">
+
+        <ImageView
+            android:id="@+id/image_collection_thumbnail"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:contentDescription="@string/collection_thumbnail_description"
+            android:importantForAccessibility="yes"
+            android:scaleType="centerCrop"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@tools:sample/avatars"/>
+
+        <TextView
+            android:id="@+id/text_collection_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:layout_marginEnd="@dimen/spacing_medium"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/colorOnSurface"
+            app:layout_constraintEnd_toStartOf="@id/badge_favorite"
+            app:layout_constraintStart_toEndOf="@id/image_collection_thumbnail"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Rainforest Species"/>
+
+        <TextView
+            android:id="@+id/text_collection_count"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/text_collection_name"
+            app:layout_constraintTop_toBottomOf="@id/text_collection_name"
+            tools:text="42 species"/>
+
+        <ImageView
+            android:id="@+id/badge_favorite"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:contentDescription="@string/favorite_badge_description"
+            android:importantForAccessibility="yes"
+            android:src="@drawable/ic_favorite"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorSecondary"
+            tools:visibility="visible"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>
