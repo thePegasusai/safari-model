@@ -1,0 +1,165 @@
+# Prometheus Configuration for Wildlife Detection Safari Pokédex
+# Version: 2.45.0
+# Purpose: Core metrics collection and monitoring system configuration
+
+# Global configurations
+global:
+  scrape_interval: 15s     # Default scrape interval for all jobs
+  evaluation_interval: 15s  # Default evaluation interval for rules
+  scrape_timeout: 10s      # Default timeout for scrape requests
+  external_labels:
+    environment: production
+    region: global
+
+# Alertmanager configuration
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+      scheme: http
+      timeout: 10s
+      api_version: v2
+
+# Rule files for recording and alerting
+rule_files:
+  # Performance and SLA recording rules
+  - /etc/prometheus/recording.rules.yml
+  # Alert definitions
+  - /etc/prometheus/alerting.rules.yml
+
+# Scrape configurations for all services
+scrape_configs:
+  # API Gateway metrics
+  - job_name: api-gateway
+    scrape_interval: 10s
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['api-gateway:9090']
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_label_app]
+        target_label: app
+      - source_labels: [__meta_kubernetes_pod_name]
+        target_label: pod
+    metric_relabel_configs:
+      - source_labels: [http_request_duration_seconds]
+        target_label: latency_sla
+
+  # ML Detection Service metrics
+  - job_name: detection-service
+    scrape_interval: 15s
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['detection-service:9090']
+    metric_relabel_configs:
+      - source_labels: [model]
+        target_label: ml_model_type
+      - source_labels: [species_detection_accuracy]
+        target_label: ml_accuracy
+      - source_labels: [inference_time_seconds]
+        target_label: ml_latency
+
+  # Collection Service metrics
+  - job_name: collection-service
+    scrape_interval: 15s
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['collection-service:9090']
+    metric_relabel_configs:
+      - source_labels: [collection_size]
+        target_label: user_data_volume
+      - source_labels: [sync_status]
+        target_label: data_consistency
+
+  # Sync Service metrics
+  - job_name: sync-service
+    scrape_interval: 15s
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['sync-service:9090']
+    metric_relabel_configs:
+      - source_labels: [sync_latency]
+        target_label: sync_performance
+      - source_labels: [sync_success_rate]
+        target_label: sync_reliability
+
+  # Node metrics via node-exporter
+  - job_name: node
+    scrape_interval: 30s
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+      - targets: ['node-exporter:9100']
+    metric_relabel_configs:
+      - source_labels: [node_memory_usage_bytes]
+        target_label: memory_utilization
+      - source_labels: [node_cpu_seconds_total]
+        target_label: cpu_utilization
+
+  # Kubernetes service discovery
+  - job_name: kubernetes-pods
+    kubernetes_sd_configs:
+      - role: pod
+        namespaces:
+          names: ['wildlife-safari']
+        selectors:
+          - role: pod
+            label: 'app=wildlife-safari'
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+
+# Storage configuration
+storage:
+  tsdb:
+    retention_time: 15d
+    retention_size: 50GB
+    min_block_duration: 2h
+    max_block_duration: 24h
+    no_lockfile: false
+    allow_overlapping_blocks: false
+    wal_compression: true
+
+# Remote write configuration for long-term storage
+remote_write:
+  - url: "http://thanos-receive:19291/api/v1/receive"
+    queue_config:
+      capacity: 500
+      max_shards: 1000
+      max_samples_per_send: 100
+      batch_send_deadline: 5s
+    write_relabel_configs:
+      - source_labels: [__name__]
+        regex: '{__name__=~"ml_.*"}'
+        action: keep
+
+# ML-specific recording rules
+recording_rules:
+  groups:
+    - name: ml_performance
+      rules:
+        - record: ml_model_accuracy_sla
+          expr: avg_over_time(species_detection_accuracy[1h]) >= 0.90
+        - record: ml_model_latency_sla
+          expr: histogram_quantile(0.95, sum(rate(inference_time_seconds_bucket[5m])) by (le)) <= 0.1
+        - record: system_availability_sla
+          expr: avg_over_time(up[24h]) >= 0.999
+
+# Custom exemplars configuration
+exemplars:
+  max_samples_per_series: 100
+
+# Tracing configuration
+tracing:
+  endpoint: "jaeger:14250"
+  sampling_fraction: 0.1
+  insecure: true
