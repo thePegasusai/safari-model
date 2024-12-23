@@ -1,0 +1,214 @@
+# Storage configuration for Wildlife Detection Safari Pokédex
+# Version: v1
+# This file defines storage resources for persistent data storage
+
+---
+# Storage Classes
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: standard-rwo
+  labels:
+    app: wildlife-safari
+annotations:
+  storageclass.kubernetes.io/is-default-class: "true"
+provisioner: kubernetes.io/aws-ebs
+parameters:
+  type: gp3
+  encrypted: "true"
+  fsType: ext4
+reclaimPolicy: Retain
+volumeBindingMode: WaitForFirstConsumer
+allowVolumeExpansion: true
+
+---
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: standard-rwx
+  labels:
+    app: wildlife-safari
+provisioner: kubernetes.io/efs
+parameters:
+  fileSystemId: fs-xxxxx
+  encrypted: "true"
+reclaimPolicy: Retain
+volumeBindingMode: Immediate
+allowVolumeExpansion: true
+
+---
+# Persistent Volumes
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+  labels:
+    app: wildlife-safari
+    type: database
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard-rwo
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+  awsElasticBlockStore:
+    fsType: ext4
+    volumeID: vol-xxxxx # To be replaced with actual volume ID
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mongodb-pv
+  labels:
+    app: wildlife-safari
+    type: database
+spec:
+  capacity:
+    storage: 200Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard-rwo
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+  awsElasticBlockStore:
+    fsType: ext4
+    volumeID: vol-xxxxx # To be replaced with actual volume ID
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: redis-pv
+  labels:
+    app: wildlife-safari
+    type: cache
+spec:
+  capacity:
+    storage: 20Gi
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard-rwo
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+  awsElasticBlockStore:
+    fsType: ext4
+    volumeID: vol-xxxxx # To be replaced with actual volume ID
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ml-models-pv
+  labels:
+    app: wildlife-safari
+    type: ml-storage
+spec:
+  capacity:
+    storage: 50Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: standard-rwx
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+  nfs:
+    server: fs-xxxxx.efs.region.amazonaws.com
+    path: "/"
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-storage-pv
+  labels:
+    app: wildlife-safari
+    type: media
+spec:
+  capacity:
+    storage: 500Gi
+  accessModes:
+    - ReadWriteMany
+  storageClassName: standard-rwx
+  persistentVolumeReclaimPolicy: Retain
+  volumeMode: Filesystem
+  nfs:
+    server: fs-xxxxx.efs.region.amazonaws.com
+    path: "/"
+
+---
+# Persistent Volume Claims
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  namespace: wildlife-safari
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard-rwo
+  resources:
+    requests:
+      storage: 100Gi
+  volumeMode: Filesystem
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongodb-pvc
+  namespace: wildlife-safari
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard-rwo
+  resources:
+    requests:
+      storage: 200Gi
+  volumeMode: Filesystem
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: wildlife-safari
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: standard-rwo
+  resources:
+    requests:
+      storage: 20Gi
+  volumeMode: Filesystem
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ml-models-pvc
+  namespace: wildlife-safari
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: standard-rwx
+  resources:
+    requests:
+      storage: 50Gi
+  volumeMode: Filesystem
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-storage-pvc
+  namespace: wildlife-safari
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: standard-rwx
+  resources:
+    requests:
+      storage: 500Gi
+  volumeMode: Filesystem
