@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Grid System (8dp grid) -->
+    <dimen name="spacing_grid_base">8dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_medium">16dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
+    <dimen name="spacing_xlarge">32dp</dimen>
+
+    <!-- Accessibility - Touch Targets -->
+    <dimen name="touch_target_min">48dp</dimen>
+
+    <!-- Icon Sizes -->
+    <dimen name="icon_size_small">24dp</dimen>
+    <dimen name="icon_size_medium">32dp</dimen>
+    <dimen name="icon_size_large">48dp</dimen>
+
+    <!-- Navigation and Controls -->
+    <dimen name="bottom_nav_height">56dp</dimen>
+    <dimen name="camera_controls_height">72dp</dimen>
+
+    <!-- Species Cards and Images -->
+    <dimen name="species_card_height">160dp</dimen>
+    <dimen name="species_image_size">120dp</dimen>
+
+    <!-- Corner Radii -->
+    <dimen name="corner_radius_small">4dp</dimen>
+    <dimen name="corner_radius_medium">8dp</dimen>
+    <dimen name="corner_radius_large">16dp</dimen>
+
+    <!-- Elevation Values -->
+    <dimen name="elevation_small">2dp</dimen>
+    <dimen name="elevation_medium">4dp</dimen>
+    <dimen name="elevation_large">8dp</dimen>
+
+    <!-- Typography Scale (using sp for accessibility) -->
+    <dimen name="text_size_caption">12sp</dimen>
+    <dimen name="text_size_body">14sp</dimen>
+    <dimen name="text_size_title">20sp</dimen>
+    <dimen name="text_size_headline">24sp</dimen>
+</resources>
