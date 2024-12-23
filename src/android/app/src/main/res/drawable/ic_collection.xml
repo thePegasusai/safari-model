@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24.0"
+    android:viewportHeight="24.0"
+    android:tint="?attr/colorControlNormal"
+    android:autoMirrored="true">
+
+    <!-- 
+    Collection icon vector drawable
+    - Implements minimalist design with nested squares and connecting lines
+    - Uses 2px stroke width for visual consistency
+    - Optimized path data for performance
+    - Supports dynamic tinting via colorControlNormal
+    - Hardware accelerated rendering enabled
+    -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="?attr/colorControlNormal"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M4,4h16v16H4V4z
+                         M8,8h8v8H8V8z
+                         M12,4v4
+                         M12,16v4
+                         M4,12h4
+                         M16,12h4" />
+
+</vector>
