@@ -1,0 +1,173 @@
+# Wildlife Detection Safari Pokédex Global .gitignore
+# Version: 1.0.0
+
+# Operating System Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+*.swp
+*~
+
+# IDE and Editor Files
+.idea/
+.vscode/
+*.sublime-workspace
+*.sublime-project
+.project
+.settings/
+*.swp
+*.swo
+.classpath
+.factorypath
+nbproject/
+
+# Build and Dependency Directories
+node_modules/
+dist/
+build/
+out/
+target/
+*.pyc
+__pycache__/
+*.class
+*.jar
+!gradle-wrapper.jar
+
+# Environment and Secrets
+.env
+.env.local
+.env.*.local
+.env.development
+.env.test
+.env.production
+*.key
+*.pem
+*.pfx
+*.p12
+*.cer
+*.crt
+*.keystore
+secrets.yaml
+secrets.yml
+*secret*
+*password*
+*credential*
+
+# ML Model Files
+*.tflite
+*.mlmodel
+*.h5
+*.onnx
+model_weights/
+saved_models/
+pretrained/
+
+# Test Coverage
+coverage/
+.nyc_output/
+.coverage
+htmlcov/
+test-results/
+junit/
+
+# Logs
+*.log
+logs/
+log/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Infrastructure
+terraform.tfstate
+terraform.tfstate.backup
+.terraform/
+*.tfvars
+.terraformrc
+terraform.rc
+
+# Cloud Provider Artifacts
+.aws/
+.gcloud/
+credentials.json
+gcloud.json
+aws.config
+azure.config
+
+# LNN Model Artifacts
+*.lnn
+*.lnn.weights
+*.lnn.config
+*.lnn.checkpoint
+lnn_models/
+lnn_checkpoints/
+
+# Region-Specific Configs
+.env.*.region
+config.*.json
+regional_settings/
+region_configs/
+
+# Dependencies and Package Management
+yarn.lock
+package-lock.json
+composer.lock
+Gemfile.lock
+poetry.lock
+pip-lock.txt
+
+# Mobile Development
+## iOS
+## (Coordinating with src/ios/.gitignore)
+*.ipa
+*.dSYM.zip
+*.dSYM
+xcuserdata/
+*.xcworkspace
+Pods/
+
+## Android
+## (Coordinating with src/android/.gitignore)
+*.apk
+*.aab
+*.ap_
+*.dex
+local.properties
+proguard/
+
+# Backend Development
+## (Coordinating with src/backend/.gitignore)
+*.sqlite
+*.sqlite3
+*.db
+migrations/
+dump.rdb
+
+# Documentation Generated
+docs/_build/
+site/
+.docusaurus
+
+# Temporary Files
+tmp/
+temp/
+.tmp/
+*.tmp
+*.bak
+*.swp
+*.swo
+
+# OS Generated Files
+.directory
+.nfs*
+Icon?
+
+# Project-Specific
+wildlife_data/raw/
+fossil_scans/
+training_data/
+validation_sets/
